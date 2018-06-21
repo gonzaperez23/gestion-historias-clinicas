@@ -32,6 +32,6 @@ app.use('/causas-internacion', causasinternacion);
 app.use('/usuarios', usuarios);
 app.use('/pacientes', pacientes);
 
-app.listen(3000);
+app.listen(4545);
 
 module.exports = app;
