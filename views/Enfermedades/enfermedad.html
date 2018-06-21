@@ -1,0 +1,82 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">
+            <i class="fa fa-files-o"></i> {%if (model != null) %} EDITAR {%else%} NUEVA {%endif%} ENFERMEDAD</h3>
+        <ol class="breadcrumb">
+            <li>
+                <i class="icon_house_alt"></i>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <i class="icon_profile">
+
+                </i>
+                <a href="/enfermedades">Enfermedades</a>
+            </li>
+            </a>
+            <li>
+                <i class="fa fa-files-o"></i>{%if model.length > 0 %} Editar {%else%} Nueva {%endif%} enfermedad</li>
+        </ol>
+    </div>
+</div>
+<!-- Form validations -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading">
+                COMPLETE LOS DATOS NECESARIOS
+            </header>
+            <div class="panel-body">
+                <div class="form">
+                    {% if resultado != null %}
+                    <div class="alert {% if resultado.resultado == true %} alert-success {% else %} alert-danger {% endif %}">
+                        <strong>¡{{resultado.mensaje}}!</strong>
+                    </div>
+                    {% endif %}
+                    <form class="form-validate form-horizontal" id="FormEnfermedad" method="post" action="/enfermedades/enfermedad">
+                        <input id="id" name="id" value="{%if (model != null)%} {{model.id}} {%endif%}" hidden/>
+                        <div class="form-group ">
+                            <label for="NombreEnfermedad" class="control-label col-lg-2">NOMBRE
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="NombreEnfermedad" name="NombreEnfermedad" type="text" value="{%if (model != null)%} {{model.NombreEnfermedad}} {%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="EsContagiosa" class="control-label col-lg-2">¿ES CONTAGIOSA?
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="EsContagiosa" id="EsContagiosa" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    <option value="SI" {%if (model != null)%} {%if (model.EsContagiosa=="SI" )%} selected {%endif%}{%endif%}>SI</option>
+                                    <option value="NO" {%if (model != null)%} {%if (model.EsContagiosa=="NO" )%} selected {%endif%}{%endif%}>NO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="Observaciones" class="control-label col-lg-2">OBSERVACIONES
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <textarea class="form-control" id="Observaciones" name="Observaciones" type="text">{%if (model != null)%} {{model.Observaciones}} {%endif%}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-primary" type="submit">GUARDAR</button>
+                                <a class="btn btn-default" href="/enfermedades">VOLVER</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script src="/enfermedades.js"></script> {% endblock %}

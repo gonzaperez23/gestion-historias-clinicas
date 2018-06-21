@@ -1,0 +1,14 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block style %}
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" /> {% endblock %} {% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>ADMINISTRACIÓN DE CAUSAS DE INTERNACION</h1>
+        <a class="btn btn-success" href="/causas-internacion/causainternacion">Nueva causa de internación</a> <br/><br/>
+        <div id="jsGrid"></div>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script> 
+<script src="/grid-methods.js"></script>req.
+<script type="text/javascript" src="/causas-internacion-grid.js"></script> {% endblock %}

@@ -1,0 +1,70 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">
+            <i class="fa fa-files-o"></i> {%if (model != null) %} EDITAR {%else%} NUEVA {%endif%} CAUSA DE INTERNACION</h3>
+        <ol class="breadcrumb">
+            <li>
+                <i class="icon_house_alt"></i>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <i class="icon_profile">
+
+                </i>
+                <a href="/causas-internacion">Causas Internacion</a>
+            </li>
+            </a>
+            <li>
+                <i class="fa fa-files-o"></i>{%if (model != null) %} Editar {%else%} Nueva {%endif%} causa de internacion</li>
+        </ol>
+    </div>
+</div>
+<!-- Form validations -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading">
+                COMPLETE LOS DATOS NECESARIOS
+            </header>
+            <div class="panel-body">
+                <div class="form">
+                    {% if resultado != null %}
+                        <div class="alert {% if resultado.resultado == true %} alert-success {% else %} alert-danger {% endif %}">
+                            <strong>¡{{resultado.mensaje}}!</strong>
+                        </div>
+                    {% endif %}
+                    <form class="form-validate form-horizontal" id="FormCausaInternacion" method="post" action="/causas-internacion/causainternacion">
+                        <input id="id" name="id" value="{%if (model != null)%} {{model.id}} {%endif%}" hidden/>
+                        <div class="form-group ">
+                            <label for="NombreCausa" class="control-label col-lg-2">NOMBRE
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="NombreCausa" name="NombreCausa" type="text" value="{%if (model != null)%} {{model.NombreCausa}} {%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="Observaciones" class="control-label col-lg-2">OBSERVACIONES
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <textarea class="form-control" id="Observaciones" name="Observaciones" type="text">{%if (model != null)%} {{model.Observaciones}} {%endif%}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-primary" type="submit">GUARDAR</button>
+                                <a class="btn btn-default" href="/causas-internacion">VOLVER</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script src="/causas-internacion.js"></script> {% endblock %}

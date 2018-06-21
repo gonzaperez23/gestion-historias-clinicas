@@ -1,0 +1,199 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">
+            <i class="fa fa-files-o"></i> {%if (model != null) %} EDITAR {%else%} NUEVO {%endif%} PACIENTE</h3>
+        <ol class="breadcrumb">
+            <li>
+                <i class="icon_house_alt"></i>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <i class="icon_profile">
+
+                </i>
+                <a href="/pacientes">Pacientes</a>
+            </li>
+            </a>
+            <li>
+                <i class="fa fa-files-o"></i>{%if (model != null) %} Editar {%else%} Nuevo {%endif%} paciente</li>
+        </ol>
+    </div>
+</div>
+<!-- Form validations -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading">
+                COMPLETE LOS DATOS NECESARIOS
+            </header>
+            <div class="panel-body">
+                <div class="form">
+                    {% if resultado != null %}
+                    <div class="alert {% if resultado.resultado == true %} alert-success {% else %} alert-danger {% endif %}">
+                        <strong>¡{{resultado.mensaje}}!</strong>
+                    </div>
+                    {% endif %}
+                    <form class="form-validate form-horizontal" id="FormPaciente" method="post" action="/pacientes/paciente">
+                        <input id="id" name="id" value="{%if (model != null)%}{{model.id}}{%endif%}" hidden/>
+                        <div class="form-group ">
+                            <label for="dni" class="control-label col-lg-2">DNI
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="dni" name="dni" type="text" value="{%if (model != null)%}{{model.dni}}{%endif%}" />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="nombre" class="control-label col-lg-2">NOMBRE
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="nombre" name="nombre" type="text" value="{%if (model != null)%}{{model.nombre}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="apellido" class="control-label col-lg-2">APELLIDO
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="apellido" name="apellido" type="text" value="{%if (model != null)%}{{model.apellido}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="email" class="control-label col-lg-2">EMAIL
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="email" name="email" type="email" value="{%if (model != null)%}{{model.email}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="gruposanguineo" class="control-label col-lg-2">GRUPO SANGÜINEO
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="gruposanguineo" id="gruposanguineo" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    {% for grupo in grupossanguineos %}
+                                    <option value="{{grupo.NombreGrupoSanguineo}}" {%if (model != null)%} {%if (model.gruposanguineo == grupo.NombreGrupoSanguineo)%}
+                                        selected {%endif%}{%endif%}>
+                                       {{grupo.NombreGrupoSanguineo}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="Observaciones" class="control-label col-lg-2">RESUMEN MEDICO
+                            </label>
+                            <div class="col-lg-6">
+                                <textarea class="form-control" id="resumenmedico" name="resumenmedico" type="text">{%if (model != null)%}{{model.resumenmedico}}{%endif%}</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="email" class="control-label col-lg-2">FECHA DE NACIMIENTO
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="fechanacimiento" name="fechanacimiento" type="date" value="{%if (model != null)%}{{model.fechanacimiento}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="obrasocial" class="control-label col-lg-2">OBRA SOCIAL
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="obrasocial" id="obrasocial" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    {% for obrasocial in obrassociales %}
+                                    <option value="{{obrasocial.NombreObraSocial}}" {%if (model != null)%} {%if (model.obrasocial== obrasocial.NombreObraSocial)%} selected {%endif%}{%endif%}>
+                                       {{obrasocial.NombreObraSocial}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="planobrasocial" class="control-label col-lg-2">PLAN OBRA SOCIAL
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="planobrasocial" name="planobrasocial" type="text" value="{%if (model != null)%}{{model.planobrasocial}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="nroafiliado" class="control-label col-lg-2">NRO AFILIADO
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="nroafiliado" name="nroafiliado" type="number" value="{%if (model != null)%}{{model.nroafiliado}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="provincia" class="control-label col-lg-2">PROVINCIA
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="provincia" id="provincia" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    {% for provincia in provincias %}
+                                    <option value="{{provincia.Id}}" {%if (model != null)%} {%if (model.provincia == provincia.Id)%} selected {%endif%}{%endif%}>
+                                       {{provincia.Nombre}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="ciudad" class="control-label col-lg-2">LOCALIDAD
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="ciudad" id="ciudad" class="form-control" disabled>
+                                    <option value="">Seleccione un valor...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="domicilio" class="control-label col-lg-2">DOMICILIO
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="domicilio" name="domicilio" type="text" value="{%if (model != null)%}{{model.domicilio}}{%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="sexo" class="control-label col-lg-2">SEXO
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="sexo" id="sexo" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    <option value="M" {%if (model != null)%} {%if (model.sexo=="M" )%} selected {%endif%}{%endif%}>M</option>
+                                    <option value="F" {%if (model != null)%} {%if (model.sexo=="F" )%} selected {%endif%}{%endif%}>F</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-primary" type="submit">GUARDAR</button>
+                                <a class="btn btn-default" href='/pacientes'>VOLVER</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script src="/pacientes.js"></script> {%if (model != null)%}
+<script>
+    actualizarValorCiudad('{{model.ciudad}}');
+</script> {%endif%} {% endblock %}

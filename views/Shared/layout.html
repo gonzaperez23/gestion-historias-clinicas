@@ -1,0 +1,125 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Pagina principal{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="/elegant-icons-style.css" rel="stylesheet" />
+    <link href="/font-awesome.min.css" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="/fullcalendar.css">
+    <link href="/widgets.css" rel="stylesheet">
+    <link href="/style.css" rel="stylesheet">
+    <link href="/style-responsive.css" rel="stylesheet" />
+    <link href="/xcharts.min.css" rel=" stylesheet">
+    <link href="/jquery-ui-1.10.4.min.css" rel="stylesheet"> {% block style %} {% endblock %}
+</head>
+
+<body>
+    <section id="container">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+                <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom">
+                    <i class="icon_menu"></i>
+                </div>
+            </div>
+            <a href="/" class="logo">GESTIÓN
+                <span class="lite">DE HISTORIAS CLÍNICAS</span>
+            </a>
+
+            <div class="nav search-row" id="top_menu">
+                <ul class="nav top-menu">
+                    <li>
+                        <form class="navbar-form">
+                            <input class="form-control" placeholder="Search" type="text">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!--header end-->
+
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">
+                    <li class="active">
+                        <a href="/">
+                            <i class="icon_house_alt"></i>
+                            <span>HOME</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;">
+                            <i class="icon_table"></i>
+                            <span>PARAMETROS</span>
+                            <span class="menu-arrow arrow_carrot-right"></span>
+                        </a>
+                        <ul class="sub">
+                            <li>
+                                <a href="/medicamentos">MEDICAMENTOS</a>
+                            </li>
+                            <li>
+                                <a href="/enfermedades">ENFERMEDADES</a>
+                            </li>
+                            <li>
+                                <a href="/causas-internacion">CAUSAS INTERN.</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="widgets.html">
+                            <i class="icon_documents_alt"></i>
+                            <span>HIST. CLÍNICAS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/usuarios">
+                            <i class="icon_profile"></i>
+                            <span>PERSONAL</span>
+                        </a>
+                    </li>
+
+                    <li class="sub-menu">
+                        <a href="/pacientes">
+                            <i class="icon_bag"></i>
+                            <span>PACIENTES</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+
+        <div id="main-content">
+            <section class="wrapper">
+                {% block content %} {% endblock %}
+            </section>
+        </div>
+
+        <!-- javascripts -->
+        <script src="/jquery.js"></script>
+        <!-- bootstrap -->
+        <script src="/bootstrap.min.js"></script>
+        <!-- nice scroll -->
+        <script src="/jquery.scrollTo.min.js"></script>
+        <script src="/jquery.nicescroll.js" type="text/javascript"></script>
+        <!-- custom select -->
+        <script src="/jquery.validate.min.js"></script>
+        <!--custome script for all page-->
+        <script src="/jquery.blockUI.js"></script>
+        <script src="/scripts.js"></script>
+        {% block javascript %} {% endblock %}
+    </section>
+</body>
+
+</html>

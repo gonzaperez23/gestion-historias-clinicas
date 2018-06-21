@@ -1,0 +1,102 @@
+var MongoClient = require('mongodb').MongoClient;
+var dbConnectionString = 'mongodb://gperez:2312carla1992@ds241019.mlab.com:41019/gestor-historias-clinicas'
+var orderFieldValue;
+function resultadoConsulta(estado, respuesta) {
+  this.estado = estado;
+  this.respuesta = respuesta;
+}
+
+exports.ObtenerRegistros = function ObtenerRegistros(entidad, callback) {
+
+  MongoClient.connect(dbConnectionString, function (err, db) {
+    if (err) {
+      callback(new resultadoConsulta(false, "Ocurrio un error al comunicarse con la base de datos"));
+    };
+
+    var collection = db.collection(entidad);
+    collection.find({}).toArray(function (err, result) {
+      if (err) throw err;
+      db.close();
+
+      callback(new resultadoConsulta(true, result));
+    });
+  })
+}
+
+exports.ObtenerRegistrosFiltrados = function ObtenerRegistrosFiltrados(entidad, filtros, callback) {
+
+  MongoClient.connect(dbConnectionString, function (err, db) {
+    if (err) {
+      callback(new resultadoConsulta(false, "Ocurrio un error al comunicarse con la base de datos"));
+    };
+
+    var collection = db.collection(entidad);
+    collection.find(filtros).toArray(function (err, result) {
+      if (err) throw err;
+      db.close();
+
+      callback(new resultadoConsulta(true, result));
+    });
+  })
+}
+
+exports.InsertarRegistro = function InsertarRegistro(endidad, objeto, callback) {
+  MongoClient.connect(dbConnectionString,
+    function (err, db) {
+      if (err) throw err;
+      var mysort = { id: -1 };
+      db.collection(endidad).find().sort(mysort).toArray(function (err, value) {
+        if (value.length > 0) {
+          objeto.id = value[0].id + 1;
+        } else {
+          objeto.id = 1;
+        }
+
+        db.collection(endidad).insert(objeto, function (err, result) {
+          if (err) {
+            db.close();
+            callback(new resultadoConsulta(false, "Los datos no han podido guardarse por un error interno del servidor"));
+          }
+          else {
+            db.close();
+            callback(new resultadoConsulta(true, "Los datos se han guardado correctamente"));
+          }
+        });
+      });
+    });
+};
+
+exports.ActualizarRegistro = function ActualizarRegistro(endidad, objeto, idObjeto, callback) {
+  MongoClient.connect(dbConnectionString,
+    function (err, db) {
+      if (err) throw err;
+      db.collection(endidad).update({ "id": parseInt(idObjeto) }, objeto, function (err, result) {
+        if (err) {
+          db.close();
+          callback(new resultadoConsulta(false, "Los datos no han podido guardarse por un error interno del servidor"));
+        }
+        else {
+          db.close();
+          callback(new resultadoConsulta(true, "Los datos se han guardado correctamente"));
+        }
+      });
+    });
+};
+
+exports.EliminarRegistro = function EliminarRegistro(endidad, registerId, callback) {
+  MongoClient.connect(dbConnectionString,
+    function (err, db) {
+      if (err) throw err;
+      var query = { id: registerId };
+      db.collection(endidad).remove(query, function (err, result) {
+        if (err) {
+          db.close();
+          callback(new resultadoConsulta(false, "No se ha podido eliminar el registro"));
+        }
+        else {
+          db.close();
+          callback(new resultadoConsulta(true, "Se ha eliminado el registro"));
+        }
+      });
+    });
+}; 

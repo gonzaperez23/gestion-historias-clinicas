@@ -1,0 +1,175 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">
+            <i class="fa fa-files-o"></i> {%if (model != null) %} EDITAR {%else%} NUEVO {%endif%} USUARIO</h3>
+        <ol class="breadcrumb">
+            <li>
+                <i class="icon_house_alt"></i>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <i class="icon_profile">
+
+                </i>
+                <a href="/usuarios">Personal</a>
+            </li>
+            </a>
+            <li>
+                <i class="fa fa-files-o"></i>{%if (model != null) %} Editar {%else%} Nuevo {%endif%} usuario</li>
+        </ol>
+    </div>
+</div>
+<!-- Form validations -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading">
+                COMPLETE LOS DATOS NECESARIOS
+            </header>
+            <div class="panel-body">
+                <div class="form">
+                    {% if resultado != null %}
+                    <div class="alert {% if resultado.resultado == true %} alert-success {% else %} alert-danger {% endif %}">
+                        <strong>¡{{resultado.mensaje}}!</strong>
+                    </div>
+                    {% endif %}
+                    <form class="form-validate form-horizontal" id="FormUsuario" method="post" action="/usuarios/usuario">
+                        <input id="id" name="id" value="{%if (model != null)%} {{model.id}} {%endif%}" hidden/>
+                        <div class="form-group ">
+                            <label for="dni" class="control-label col-lg-2">DNI
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="dni" name="dni" type="text" value="{%if (model != null)%} {{model.dni}} {%endif%}" />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="nombre" class="control-label col-lg-2">NOMBRE
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="nombre" name="nombre" type="text" value="{%if (model != null)%} {{model.nombre}} {%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="apellido" class="control-label col-lg-2">APELLIDO
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="apellido" name="apellido" type="text" value="{%if (model != null)%} {{model.apellido}} {%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="email" class="control-label col-lg-2">EMAIL
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="email" name="email" type="email" value="{%if (model != null)%} {{model.email}} {%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="clave" class="control-label col-lg-2">CLAVE
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="clave" name="clave" type="password" />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="confirm_clave" class="control-label col-lg-2">CONFIRMAR CLAVE
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="confirm_clave" name="confirm_clave" type="password" />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="rolId" class="control-label col-lg-2">ROL
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="rolId" id="rolId" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    {% for rol in roles %}
+                                    <option value="{{rol.Id}}" {%if (model != null)%} {%if (model.rolId== rol.Id)%} selected {%endif%}{%endif%}>
+                                        {{rol.Nombre}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="matricula" class="control-label col-lg-2">MATRICULA
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="matricula" name="matricula" type="text" value="{%if (model != null)%} {{model.matricula}} {%endif%}"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="especialidadId" class="control-label col-lg-2">ESPECIALIDAD
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="especialidadId" id="especialidadId" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    {% for especialidad in especialidades %}
+                                    <option value="{{especialidad.Id}}" {%if (model != null)%} {%if (model.especialidadId== especialidad.Id)%} selected {%endif%}{%endif%}>
+                                        {{especialidad.Nombre}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="provincia" class="control-label col-lg-2">PROVINCIA
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="provincia" id="provincia" class="form-control">
+                                    <option value="">Seleccione un valor...</option>
+                                    {% for provincia in provincias %}
+                                    <option value="{{provincia.Id}}" {%if (model != null)%} {%if (model.provincia== provincia.Id)%} selected {%endif%}{%endif%}>
+                                        {{provincia.Nombre}}
+                                    </option>
+                                    {%endfor%}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label for="ciudad" class="control-label col-lg-2">LOCALIDAD
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <select name="ciudad" id="ciudad" class="form-control" disabled>
+                                    <option value="">Seleccione un valor...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-primary" type="submit">GUARDAR</button>
+                                <button class="btn btn-default" onclick="location.href = '/usuarios'">VOLVER</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script src="/usuarios.js"></script> 
+{%if (model != null)%} 
+<script>
+    actualizarValorCiudad('{{model.ciudad}}');
+</script>
+{%endif%}
+{% endblock %}
