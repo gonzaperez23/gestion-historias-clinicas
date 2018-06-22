@@ -5,6 +5,7 @@ var swig = require('swig');
 var causaInternacion = require('../models/causaInternacion');
 var resultado = require('../models/resultado');
 var generalServices = require('../services/GeneralServices');
+var mid = require('../middlewares/login');
 
 //Inicio métodos Generales
 function obtenerFiltros(body) {
@@ -65,7 +66,7 @@ router.post('/ajaxGetCausasInternacionFiltradas/', function (req, res) {
   });
 });
 
-router.post('/ajaxPostEliminarCausaInternacion', function (req, res, next) {
+router.post('/ajaxPostEliminarCausaInternacion', function (req, res) {
   var idEnfermedad = req.body.id;
 
   generalServices.EliminarRegistro('causas-internacion', parseInt(idEnfermedad), function (response) {
@@ -75,15 +76,16 @@ router.post('/ajaxPostEliminarCausaInternacion', function (req, res, next) {
 //Fin métodos AJAX
 
 //Inicio métodos Router
-router.get('/', function (req, res, next) {
+router.get('/', mid.requiresLogin, function (req, res, next) {
   var result = swig.renderFile('views/CausasInternacion/index.html', {
     pageTitle: 'Listado de causas de internacion',
+    userRol: req.session.rol, userName: req.session.email
   });
 
   res.send(result);
 });
 
-router.get('/causainternacion/:id?', function (req, res, next) {
+router.get('/causainternacion/:id?', mid.requiresLogin, function (req, res, next) {
   var model = null;
   var result = null;
   swig.invalidateCache();
@@ -99,6 +101,7 @@ router.get('/causainternacion/:id?', function (req, res, next) {
       var result = swig.renderFile('views/CausasInternacion/causainternacion.html', {
         model: model,
         pageTitle: 'Editar causa de internacion',
+        userRol: req.session.rol, userName: req.session.email
       });
 
       res.send(result);
@@ -113,7 +116,7 @@ router.get('/causainternacion/:id?', function (req, res, next) {
   }
 });
 
-router.post('/causainternacion', function (req, res, next) {
+router.post('/causainternacion', mid.requiresLogin, function (req, res, next) {
   var model = new causaInternacion(req.body.id, req.body.NombreCausa, req.body.Observaciones);
 
   if (req.body.id === "") {
@@ -123,8 +126,10 @@ router.post('/causainternacion', function (req, res, next) {
 
       swig.invalidateCache();
       result = swig.renderFile('views/causasinternacion/causainternacion.html', {
+        pageTitle: "Nueva causa de internación",
         model: model,
         resultado: new resultado(insertEstado, insertRespuesta),
+        userRol: req.session.rol, userName: req.session.email
       });
 
       res.send(result);
@@ -138,8 +143,10 @@ router.post('/causainternacion', function (req, res, next) {
           var insertRespuesta = response.respuesta;
 
           result = swig.renderFile('views/causasinternacion/causainternacion.html', {
+            pageTitle: "Editar causa de internación",
             model: model,
-            resultado: new resultado(insertEstado, insertRespuesta)
+            resultado: new resultado(insertEstado, insertRespuesta),
+            userRol: req.session.rol, userName: req.session.email
           });
 
           res.send(result);
@@ -148,7 +155,8 @@ router.post('/causainternacion', function (req, res, next) {
       else {
         result = swig.renderFile('views/causasinternacion/causainternacion.html', {
           model: model,
-          resultado: new resultado(false, "No se pudo encontrar el registro a actualizar.")
+          resultado: new resultado(false, "No se pudo encontrar el registro a actualizar."),
+          userRol: req.session.rol, userName: req.session.email
         });
 
         res.send(result);

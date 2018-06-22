@@ -35,13 +35,13 @@
                         </div>
                     {% endif %}
                     <form class="form-validate form-horizontal" id="FormCausaInternacion" method="post" action="/causas-internacion/causainternacion">
-                        <input id="id" name="id" value="{%if (model != null)%} {{model.id}} {%endif%}" hidden/>
+                        <input id="id" name="id" value="{%if (model != null)%}{{model.id}}{%endif%}" hidden/>
                         <div class="form-group ">
                             <label for="NombreCausa" class="control-label col-lg-2">NOMBRE
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input class="form-control" id="NombreCausa" name="NombreCausa" type="text" value="{%if (model != null)%} {{model.NombreCausa}} {%endif%}"
+                                <input class="form-control" id="NombreCausa" name="NombreCausa" type="text" value="{%if (model != null)%}{{model.NombreCausa}}{%endif%}"
                                 />
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <textarea class="form-control" id="Observaciones" name="Observaciones" type="text">{%if (model != null)%} {{model.Observaciones}} {%endif%}</textarea>
+                                <textarea class="form-control" id="Observaciones" name="Observaciones" type="text">{%if (model != null)%}{{model.Observaciones}}{%endif%}</textarea>
                             </div>
                         </div>
                         <div class="form-group">

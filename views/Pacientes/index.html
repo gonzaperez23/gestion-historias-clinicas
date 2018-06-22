@@ -4,7 +4,9 @@
 <div class="row">
     <div class="col-md-12">
         <h1>ADMINISTRACIÓN DE PACIENTES</h1>
+        {%if userRol == 'MEDICO'%}
         <a class="btn btn-success" href="/pacientes/paciente">Nuevo paciente</a> <br/><br/>
+        {%endif%}
         <div id="jsGrid"></div>
     </div>
 </div>

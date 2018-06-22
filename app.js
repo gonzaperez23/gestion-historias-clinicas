@@ -3,12 +3,24 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var app = express();
+var session = require('express-session');
+
+//use sessions for tracking logins
+app.use(session({
+    secret: 'work hard',
+    resave: true,
+    saveUninitialized: false,
+    cookie: { 
+        userId: 0,
+        email: null,
+        rol: null,
+    }
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'swig');
 
-// uncomment after placing your favicon in /public
 app.use(multer({ dest: './public/images/' }).any())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'content')));
@@ -19,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'javascript')));
 
 // routes register
 var index = require('./controllers/HomeController');
+var login = require('./controllers/LoginController');
 var enfermedades = require('./controllers/EnfermedadesController');
 var medicamentos = require('./controllers/MedicamentosController');
 var causasinternacion = require('./controllers/CausasInternacionController');
@@ -26,6 +39,7 @@ var usuarios = require('./controllers/UsuariosController');
 var pacientes = require('./controllers/PacientesController');
 
 app.use('/', index);
+app.use('/login', login);
 app.use('/enfermedades', enfermedades);
 app.use('/medicamentos', medicamentos);
 app.use('/causas-internacion', causasinternacion);

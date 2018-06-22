@@ -5,6 +5,7 @@ var swig = require('swig');
 var medicamento = require('../models/medicamento');
 var resultado = require('../models/resultado');
 var generalServices = require('../services/GeneralServices');
+var mid = require('../middlewares/login');
 
 var tiposMedicamentos = null;
 
@@ -91,7 +92,7 @@ router.post('/ajaxGetMedicamentosFiltrados/', function (req, res) {
   });
 });
 
-router.post('/ajaxPostEliminarMedicamento', function (req, res, next) {
+router.post('/ajaxPostEliminarMedicamento', function (req, res) {
   var idMedicamento = req.body.id;
 
   generalServices.EliminarRegistro('medicamentos', parseInt(idMedicamento), function (response) {
@@ -101,15 +102,16 @@ router.post('/ajaxPostEliminarMedicamento', function (req, res, next) {
 //Fin métodos AJAX
 
 //Inicio métodos Router
-router.get('/', function (req, res, next) {
+router.get('/', mid.requiresLogin, function (req, res, next) {
   var result = swig.renderFile('views/medicamentos/index.html', {
+    userRol: req.session.rol, userName: req.session.email,
     pageTitle: 'Listado de medicamentos',
   });
 
   res.send(result);
 });
 
-router.get('/medicamento/:id?', function (req, res, next) {
+router.get('/medicamento/:id?', mid.requiresLogin, function (req, res, next) {
   var model = null;
   var result = null;
   swig.invalidateCache();
@@ -130,6 +132,7 @@ router.get('/medicamento/:id?', function (req, res, next) {
           model: model,
           resultado: null,
           tiposMedicamentos: this.tiposMedicamentos,
+          userRol: req.session.rol, userName: req.session.email
         });
 
         res.send(result);
@@ -141,6 +144,7 @@ router.get('/medicamento/:id?', function (req, res, next) {
         model: model,
         resultado: null,
         tiposMedicamentos: this.tiposMedicamentos,
+        userRol: req.session.rol, userName: req.session.email
       });
 
       res.send(result);
@@ -148,7 +152,7 @@ router.get('/medicamento/:id?', function (req, res, next) {
   });
 });
 
-router.post('/medicamento', function (req, res, next) {
+router.post('/medicamento', mid.requiresLogin, function (req, res, next) {
   model = new medicamento(req.body.id, req.body.NombreMedicamento, req.body.Concentracion, parseInt(req.body.IdTipoMedicamento), req.body.NombreTipoMedicamento, req.body.Observaciones);
 
   var filtroTipoMedicamento = {};
@@ -167,6 +171,7 @@ router.post('/medicamento', function (req, res, next) {
               model: model,
               resultado: new resultado(insertEstado, insertRespuesta),
               tiposMedicamentos: this.tiposMedicamentos,
+              userRol: req.session.rol, userName: req.session.email
             });
 
             res.send(result);
@@ -184,6 +189,7 @@ router.post('/medicamento', function (req, res, next) {
                   model: model,
                   resultado: new resultado(insertEstado, insertRespuesta),
                   tiposMedicamentos: this.tiposMedicamentos,
+                  userRol: req.session.rol, userName: req.session.email
                 });
 
                 res.send(result);
@@ -195,6 +201,7 @@ router.post('/medicamento', function (req, res, next) {
                 model: model,
                 resultado: new resultado(false, "No se pudo encontrar el registro a actualizar."),
                 tiposMedicamentos: this.tiposMedicamentos,
+                userRol: req.session.rol, userName: req.session.email
               });
 
               res.send(result);
@@ -207,6 +214,7 @@ router.post('/medicamento', function (req, res, next) {
           model: model,
           resultado: new resultado(false, "No se pudo encontrar el tipo de medicamento seleccionado."),
           tiposMedicamentos: this.tiposMedicamentos,
+          userRol: req.session.rol, userName: req.session.email
         });
       }
     });

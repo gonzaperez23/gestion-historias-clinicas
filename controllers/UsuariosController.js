@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt-nodejs');
 var usuario = require('../models/usuario');
 var resultado = require('../models/resultado');
 var generalServices = require('../services/GeneralServices');
+var mid = require('../middlewares/login');
 
 var router = express.Router();
 
@@ -49,7 +50,7 @@ function obtenerFiltros(body) {
 }
 
 function getGeneralParameters(callback) {
-  if (this.roles == undefined && this.especialidades == undefined && this.provincias == undefined && this.ciudades == undefine) {
+  if (this.roles == undefined || this.especialidades == undefined || this.provincias == undefined || this.ciudades == undefined) {
     generalServices.ObtenerRegistros('localidades', function (response) {
       if (response.estado == true) {
         obtenerProvincias(response.respuesta); obtenerCiudades(response.respuesta);
@@ -160,14 +161,13 @@ function completarDatos(objeto) {
 //Fin métodos Generales
 
 //Inicio métodos AJAX
-router.get('/ajaxGetLocalidades/:provincia', function(req, res) {
+router.get('/ajaxGetLocalidades/:provincia', function (req, res) {
   var resultado = [];
   var parametro = req.params.provincia.toUpperCase();
   resultado.push("Seleccione un valor...");
 
   this.ciudades.forEach(function (value) {
-    if (value.provincia.toUpperCase() == parametro)
-    {
+    if (value.provincia.toUpperCase() == parametro) {
       resultado.push(value.Nombre)
     }
   });
@@ -189,7 +189,7 @@ router.get('/ajaxGetUsuarios', function (req, res) {
   });
 });
 
-router.post('/ajaxPostEliminarUsuario', function (req, res, next) {
+router.post('/ajaxPostEliminarUsuario', function (req, res) {
   var idUsuario = req.body.id;
 
   generalServices.EliminarRegistro('usuarios', parseInt(idUsuario), function (response) {
@@ -199,15 +199,78 @@ router.post('/ajaxPostEliminarUsuario', function (req, res, next) {
 //Fin métodos AJAX
 
 //Inicio métodos Router
-router.get('/', function (req, res, next) {
+router.get('/', mid.requiresLogin, function (req, res, next) {
   var result = swig.renderFile('views/usuarios/index.html', {
-    pageTitle: 'Listado de usuarios'
+    pageTitle: 'Listado de usuarios',
+    userRol: req.session.rol, userName: req.session.email
   });
 
   res.send(result);
 });
 
-router.get('/usuario/:id?', function (req, res, next) {
+router.get('/misdatos', mid.requiresLogin, function (req, res, next) {
+  var model = null;
+  var result = null;
+  swig.invalidateCache();
+
+  getGeneralParameters(function () {
+    var filtro = {};
+    filtro.id = parseInt(req.session.userId);
+    generalServices.ObtenerRegistrosFiltrados('usuarios', filtro, function (response) {
+      if (response.estado == true) {
+        var value = response.respuesta[0];
+        model = new usuario(value.id, value.dni, value.nombre, value.apellido, value.email, "",
+          value.rolId, value.rol, value.matricula, value.especialidadId, value.especialidad, value.provincia, value.ciudad);
+      }
+
+      result = swig.renderFile('views/usuarios/misdatos.html', {
+        pageTitle: 'Editar usuarios',
+        model: model,
+        resultado: null,
+        roles: this.roles,
+        especialidades: this.especialidades,
+        provincias: this.provincias,
+        userRol: req.session.rol, userName: req.session.email
+      });
+
+      res.send(result);
+    });
+  });
+});
+
+router.post('/misdatos', mid.requiresLogin, function (req, res, next) {
+  var hash = bcrypt.hashSync(req.body.clave);
+  var model = new usuario(req.body.id, parseInt(req.body.dni), req.body.nombre, req.body.apellido, req.body.email,
+    hash, parseInt(req.body.rolId), "", req.body.matricula, parseInt(req.body.especialidadId), "", req.body.provincia, req.body.ciudad);
+
+  getGeneralParameters(function () {
+    req.session.destroy(function () {
+      obtenerObjetoActual(model, function (response) {
+        if (response != null) {
+          generalServices.ActualizarRegistro('usuarios', response, model.id, function (response) {
+            
+            res.redirect("/login/login");
+          });
+        }
+        else {
+          var result = swig.renderFile('views/usuarios/misdatos.html', {
+            model: model,
+            pageTitle: 'Nuevo usuario',
+            resultado: new resultado(true, "No se pudo actualizar el registro"),
+            roles: this.roles,
+            especialidades: this.especialidades,
+            provincias: this.provincias,
+            userRol: req.session.rol, userName: req.session.email
+          });
+
+          res.send(result);
+        }
+      });
+    });
+  });
+});
+
+router.get('/usuario/:id?', mid.requiresLogin, function (req, res, next) {
   var model = null;
   var result = null;
   swig.invalidateCache();
@@ -230,7 +293,8 @@ router.get('/usuario/:id?', function (req, res, next) {
           resultado: null,
           roles: this.roles,
           especialidades: this.especialidades,
-          provincias: this.provincias
+          provincias: this.provincias,
+          userRol: req.session.rol, userName: req.session.email
         });
 
         res.send(result);
@@ -243,7 +307,8 @@ router.get('/usuario/:id?', function (req, res, next) {
         resultado: null,
         roles: this.roles,
         especialidades: this.especialidades,
-        provincias: this.provincias
+        provincias: this.provincias,
+        userRol: req.session.rol, userName: req.session.email
       });
 
       res.send(result);
@@ -251,7 +316,7 @@ router.get('/usuario/:id?', function (req, res, next) {
   });
 });
 
-router.post('/usuario', function (req, res, next) {
+router.post('/usuario', mid.requiresLogin, function (req, res, next) {
   var hash = bcrypt.hashSync(req.body.clave);
   var model = new usuario(req.body.id, parseInt(req.body.dni), req.body.nombre, req.body.apellido, req.body.email,
     hash, parseInt(req.body.rolId), "", req.body.matricula, parseInt(req.body.especialidadId), "", req.body.provincia, req.body.ciudad);
@@ -268,7 +333,8 @@ router.post('/usuario', function (req, res, next) {
           resultado: new resultado(true, insertRespuesta),
           roles: this.roles,
           especialidades: this.especialidades,
-          provincias: this.provincias
+          provincias: this.provincias,
+          userRol: req.session.rol, userName: req.session.email
         });
 
         res.send(result);
@@ -285,7 +351,8 @@ router.post('/usuario', function (req, res, next) {
               resultado: new resultado(true, insertRespuesta),
               roles: this.roles,
               especialidades: this.especialidades,
-              provincias: this.provincias
+              provincias: this.provincias,
+              userRol: req.session.rol, userName: req.session.email
             });
 
             res.send(result);
@@ -298,7 +365,8 @@ router.post('/usuario', function (req, res, next) {
             resultado: new resultado(true, "No se pudo actualizar el registro"),
             roles: this.roles,
             especialidades: this.especialidades,
-            provincias: this.provincias
+            provincias: this.provincias,
+            userRol: req.session.rol, userName: req.session.email
           });
 
           res.send(result);

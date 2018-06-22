@@ -66,6 +66,7 @@ var Script = function () {
     $.validator.setDefaults({
         submitHandler: function () {
             $.blockUI();
+            $(".form-control:disabled").removeAttr('disabled');
             $("#FormUsuario").submit();
             $.unblockUI();
         }

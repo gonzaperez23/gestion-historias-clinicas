@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt-nodejs');
 var paciente = require('../models/paciente');
 var resultado = require('../models/resultado');
 var generalServices = require('../services/GeneralServices');
+var mid = require('../middlewares/login');
 
 var router = express.Router();
 
@@ -164,7 +165,7 @@ router.get('/ajaxGetPacientes', function (req, res) {
   });
 });
 
-router.post('/ajaxPostEliminarPaciente', function (req, res, next) {
+router.post('/ajaxPostEliminarPaciente', function (req, res) {
   var idPaciente = req.body.id;
 
   generalServices.EliminarRegistro('pacientes', parseInt(idPaciente), function (response) {
@@ -174,15 +175,16 @@ router.post('/ajaxPostEliminarPaciente', function (req, res, next) {
 //Fin métodos AJAX
 
 //Inicio métodos Router
-router.get('/', function (req, res, next) {
+router.get('/', mid.requiresLogin, function (req, res, next) {
   var result = swig.renderFile('views/pacientes/index.html', {
-    pageTitle: 'Listado de pacientes'
+    pageTitle: 'Listado de pacientes',
+    userRol: req.session.rol, userName: req.session.email
   });
 
   res.send(result);
 });
 
-router.get('/paciente/:id?', function (req, res, next) {
+router.get('/paciente/:id?', mid.requiresLogin, function (req, res, next) {
   var model = null;
   var result = null;
   swig.invalidateCache();
@@ -207,7 +209,8 @@ router.get('/paciente/:id?', function (req, res, next) {
           resultado: null,
           grupossanguineos: this.grupossanguineos,
           obrassociales: this.obrassociales,
-          provincias: this.provincias
+          provincias: this.provincias,
+          userRol: req.session.rol, userName: req.session.email
         });
 
         res.send(result);
@@ -220,7 +223,8 @@ router.get('/paciente/:id?', function (req, res, next) {
         resultado: null,
         grupossanguineos: this.grupossanguineos,
         obrassociales: this.obrassociales,
-        provincias: this.provincias
+        provincias: this.provincias,
+        userRol: req.session.rol, userName: req.session.email
       });
 
       res.send(result);
@@ -228,7 +232,7 @@ router.get('/paciente/:id?', function (req, res, next) {
   });
 });
 
-router.post('/paciente', function (req, res, next) {
+router.post('/paciente', mid.requiresLogin, function (req, res, next) {
   var model = new paciente(req.body.id, parseInt(req.body.dni), req.body.nombre, req.body.apellido, req.body.email, 
     req.body.gruposanguineo, req.body.resumenmedico, req.body.fechanacimiento, req.body.obrasocial, 
     req.body.planobrasocial, parseInt(req.body.nroafiliado), req.body.provincia, req.body.ciudad, req.body.domicilio, 
@@ -246,7 +250,8 @@ router.post('/paciente', function (req, res, next) {
           resultado: new resultado(true, insertRespuesta),
           obrassociales: this.obrassociales,
           grupossanguineos: this.grupossanguineos,
-          provincias: this.provincias
+          provincias: this.provincias,
+          userRol: req.session.rol, userName: req.session.email
         });
 
         res.send(result);
@@ -263,7 +268,8 @@ router.post('/paciente', function (req, res, next) {
               resultado: new resultado(true, insertRespuesta),
               grupossanguineos: this.grupossanguineos,
               obrassociales: this.obrassociales,
-              provincias: this.provincias
+              provincias: this.provincias,
+              userRol: req.session.rol, userName: req.session.email
             });
 
             res.send(result);
@@ -276,7 +282,8 @@ router.post('/paciente', function (req, res, next) {
             resultado: new resultado(true, "No se pudo actualizar el registro"),
             grupossanguineos: this.grupossanguineos,
             obrassociales: this.obrassociales,
-            provincias: this.provincias
+            provincias: this.provincias,
+            userRol: req.session.rol, userName: req.session.email
           });
 
           res.send(result);

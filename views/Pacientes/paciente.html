@@ -81,7 +81,7 @@
                                     {% for grupo in grupossanguineos %}
                                     <option value="{{grupo.NombreGrupoSanguineo}}" {%if (model != null)%} {%if (model.gruposanguineo == grupo.NombreGrupoSanguineo)%}
                                         selected {%endif%}{%endif%}>
-                                       {{grupo.NombreGrupoSanguineo}}
+                                      {{grupo.NombreGrupoSanguineo}}
                                     </option>
                                     {%endfor%}
                                 </select>
@@ -111,7 +111,7 @@
                                     <option value="">Seleccione un valor...</option>
                                     {% for obrasocial in obrassociales %}
                                     <option value="{{obrasocial.NombreObraSocial}}" {%if (model != null)%} {%if (model.obrasocial== obrasocial.NombreObraSocial)%} selected {%endif%}{%endif%}>
-                                       {{obrasocial.NombreObraSocial}}
+                                      {{obrasocial.NombreObraSocial}}
                                     </option>
                                     {%endfor%}
                                 </select>
@@ -142,7 +142,7 @@
                                     <option value="">Seleccione un valor...</option>
                                     {% for provincia in provincias %}
                                     <option value="{{provincia.Id}}" {%if (model != null)%} {%if (model.provincia == provincia.Id)%} selected {%endif%}{%endif%}>
-                                       {{provincia.Nombre}}
+                                      {{provincia.Nombre}}
                                     </option>
                                     {%endfor%}
                                 </select>

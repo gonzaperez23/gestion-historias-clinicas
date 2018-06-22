@@ -26,16 +26,41 @@
 <body>
     <section id="container">
         <header class="header dark-bg">
+            {%if userRol != null%}
             <div class="toggle-nav">
                 <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom">
                     <i class="icon_menu"></i>
                 </div>
             </div>
+            {%endif%}
             <a href="/" class="logo">GESTIÓN
                 <span class="lite">DE HISTORIAS CLÍNICAS</span>
             </a>
-
-            <div class="nav search-row" id="top_menu">
+            {%if userRol != null%}
+            <div class="top-nav notification-row">
+                <ul class="nav pull-right top-menu">
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="username">{{userName}}</span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li class="eborder-top">
+                                <a href="/usuarios/misdatos">
+                                    <i class="icon_profile"></i> Mis datos</a>
+                            </li>
+                            <li class="eborder-top">
+                                <a href="/login/logout">
+                                    <i class="icon_key_alt"></i> Cerrar sesión</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+            <!-- <div class="nav search-row" id="top_menu">
                 <ul class="nav top-menu">
                     <li>
                         <form class="navbar-form">
@@ -43,10 +68,12 @@
                         </form>
                     </li>
                 </ul>
-            </div>
+            </div> -->
+            {%endif%}
         </header>
         <!--header end-->
 
+        {%if userRol != null%}
         <!--sidebar start-->
         <aside>
             <div id="sidebar" class="nav-collapse ">
@@ -58,6 +85,7 @@
                             <span>HOME</span>
                         </a>
                     </li>
+                    {%if userRol == 'ADMINISTRADOR'%}
                     <li class="sub-menu">
                         <a href="javascript:;">
                             <i class="icon_table"></i>
@@ -77,28 +105,29 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="widgets.html">
-                            <i class="icon_documents_alt"></i>
-                            <span>HIST. CLÍNICAS</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="/usuarios">
                             <i class="icon_profile"></i>
                             <span>PERSONAL</span>
                         </a>
                     </li>
-
+                    {%else%} {%if userRol == 'MEDICO' or userRol == 'ENFERMERO'%}
+                    <li>
+                        <a href="widgets.html">
+                            <i class="icon_documents_alt"></i>
+                            <span>HIST. CLÍNICAS</span>
+                        </a>
+                    </li>
                     <li class="sub-menu">
                         <a href="/pacientes">
                             <i class="icon_bag"></i>
                             <span>PACIENTES</span>
                         </a>
-                    </li>
+                    </li> {%endif%} {%endif%}
                 </ul>
                 <!-- sidebar menu end-->
             </div>
         </aside>
+        {%endif%}
 
         <div id="main-content">
             <section class="wrapper">
@@ -117,8 +146,7 @@
         <script src="/jquery.validate.min.js"></script>
         <!--custome script for all page-->
         <script src="/jquery.blockUI.js"></script>
-        <script src="/scripts.js"></script>
-        {% block javascript %} {% endblock %}
+        <script src="/scripts.js"></script> {% block javascript %} {% endblock %}
     </section>
 </body>
 

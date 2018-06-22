@@ -35,13 +35,13 @@
                     </div>
                     {% endif %}
                     <form class="form-validate form-horizontal" id="FormUsuario" method="post" action="/usuarios/usuario">
-                        <input id="id" name="id" value="{%if (model != null)%} {{model.id}} {%endif%}" hidden/>
+                        <input id="id" name="id" value="{%if (model != null)%}{{model.id}}{%endif%}" hidden/>
                         <div class="form-group ">
                             <label for="dni" class="control-label col-lg-2">DNI
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input class="form-control" id="dni" name="dni" type="text" value="{%if (model != null)%} {{model.dni}} {%endif%}" />
+                                <input class="form-control" id="dni" name="dni" type="text" value="{%if (model != null)%}{{model.dni}}{%endif%}" />
                             </div>
                         </div>
                         <div class="form-group ">
@@ -49,7 +49,7 @@
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input class="form-control" id="nombre" name="nombre" type="text" value="{%if (model != null)%} {{model.nombre}} {%endif%}"
+                                <input class="form-control" id="nombre" name="nombre" type="text" value="{%if (model != null)%}{{model.nombre}}{%endif%}"
                                 />
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input class="form-control" id="apellido" name="apellido" type="text" value="{%if (model != null)%} {{model.apellido}} {%endif%}"
+                                <input class="form-control" id="apellido" name="apellido" type="text" value="{%if (model != null)%}{{model.apellido}}{%endif%}"
                                 />
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input class="form-control" id="email" name="email" type="email" value="{%if (model != null)%} {{model.email}} {%endif%}"
+                                <input class="form-control" id="email" name="email" type="email" value="{%if (model != null)%}{{model.email}}{%endif%}"
                                 />
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                                     <option value="">Seleccione un valor...</option>
                                     {% for rol in roles %}
                                     <option value="{{rol.Id}}" {%if (model != null)%} {%if (model.rolId== rol.Id)%} selected {%endif%}{%endif%}>
-                                        {{rol.Nombre}}
+                                       {{rol.Nombre}}
                                     </option>
                                     {%endfor%}
                                 </select>
@@ -107,7 +107,7 @@
                                 <span class="required">*</span>
                             </label>
                             <div class="col-lg-6">
-                                <input class="form-control" id="matricula" name="matricula" type="text" value="{%if (model != null)%} {{model.matricula}} {%endif%}"
+                                <input class="form-control" id="matricula" name="matricula" type="text" value="{%if (model != null)%}{{model.matricula}}{%endif%}"
                                 />
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                                     <option value="">Seleccione un valor...</option>
                                     {% for especialidad in especialidades %}
                                     <option value="{{especialidad.Id}}" {%if (model != null)%} {%if (model.especialidadId== especialidad.Id)%} selected {%endif%}{%endif%}>
-                                        {{especialidad.Nombre}}
+                                       {{especialidad.Nombre}}
                                     </option>
                                     {%endfor%}
                                 </select>
@@ -135,7 +135,7 @@
                                     <option value="">Seleccione un valor...</option>
                                     {% for provincia in provincias %}
                                     <option value="{{provincia.Id}}" {%if (model != null)%} {%if (model.provincia== provincia.Id)%} selected {%endif%}{%endif%}>
-                                        {{provincia.Nombre}}
+                                       {{provincia.Nombre}}
                                     </option>
                                     {%endfor%}
                                 </select>

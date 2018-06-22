@@ -1,0 +1,31 @@
+{% extends '../Shared/layout.html' %}
+
+{% block title %}{{pageTitle}}{% endblock %}
+
+{% block content %}
+<form class="form-validate form-horizontal" id="FormLogin" method="post" action="/login/login">
+    <div class="form-group ">
+        <label for="email" class="control-label col-lg-2">EMAIL
+            <span class="required">*</span>
+        </label>
+        <div class="col-lg-6">
+            <input class="form-control" id="email" name="email" type="text" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <label for="clave" class="control-label col-lg-2">CONTRASEÑA
+            <span class="required">*</span>
+        </label>
+        <div class="col-lg-6">
+            <input class="form-control" id="clave" name="clave" type="password" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button class="btn btn-primary" type="submit">INICIAR SESIÓN</button>
+            <a class="btn btn-default" href="/login/login">CANCELAR</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
