@@ -1,8 +1,10 @@
-{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block style %}
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block content %}
 <div class="row">
     <div class="col-md-12">
         <h1>HISTORIAS CLÍNICAS</h1>
-        <a class="btn btn-success" href="/enfermedades/enfermedad">Nueva enfermedad</a>
+        {%if userRol == 'MEDICO'%}
+        <a class="btn btn-success" href="/historias-clinicas/nueva">Nueva historia clinica</a>
+        {%endif%}
     </div>
 </div>
 {% endblock %} {% block javascript %}{% endblock %}

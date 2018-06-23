@@ -41,19 +41,19 @@ exports.ObtenerRegistrosFiltrados = function ObtenerRegistrosFiltrados(entidad, 
   })
 }
 
-exports.InsertarRegistro = function InsertarRegistro(endidad, objeto, callback) {
+exports.InsertarRegistro = function InsertarRegistro(entidad, objeto, callback) {
   MongoClient.connect(dbConnectionString,
     function (err, db) {
       if (err) throw err;
       var mysort = { id: -1 };
-      db.collection(endidad).find().sort(mysort).toArray(function (err, value) {
+      db.collection(entidad).find().sort(mysort).toArray(function (err, value) {
         if (value.length > 0) {
           objeto.id = value[0].id + 1;
         } else {
           objeto.id = 1;
         }
 
-        db.collection(endidad).insert(objeto, function (err, result) {
+        db.collection(entidad).insert(objeto, function (err, result) {
           if (err) {
             db.close();
             callback(new resultadoConsulta(false, "Los datos no han podido guardarse por un error interno del servidor"));
@@ -67,11 +67,11 @@ exports.InsertarRegistro = function InsertarRegistro(endidad, objeto, callback) 
     });
 };
 
-exports.ActualizarRegistro = function ActualizarRegistro(endidad, objeto, idObjeto, callback) {
+exports.ActualizarRegistro = function ActualizarRegistro(entidad, objeto, idObjeto, callback) {
   MongoClient.connect(dbConnectionString,
     function (err, db) {
       if (err) throw err;
-      db.collection(endidad).update({ "id": parseInt(idObjeto) }, objeto, function (err, result) {
+      db.collection(entidad).update({ "id": parseInt(idObjeto) }, objeto, function (err, result) {
         if (err) {
           db.close();
           callback(new resultadoConsulta(false, "Los datos no han podido guardarse por un error interno del servidor"));
@@ -84,12 +84,12 @@ exports.ActualizarRegistro = function ActualizarRegistro(endidad, objeto, idObje
     });
 };
 
-exports.EliminarRegistro = function EliminarRegistro(endidad, registerId, callback) {
+exports.EliminarRegistro = function EliminarRegistro(entidad, registerId, callback) {
   MongoClient.connect(dbConnectionString,
     function (err, db) {
       if (err) throw err;
       var query = { id: registerId };
-      db.collection(endidad).remove(query, function (err, result) {
+      db.collection(entidad).remove(query, function (err, result) {
         if (err) {
           db.close();
           callback(new resultadoConsulta(false, "No se ha podido eliminar el registro"));
@@ -100,7 +100,7 @@ exports.EliminarRegistro = function EliminarRegistro(endidad, registerId, callba
         }
       });
     });
-}; 
+};
 
 exports.IniciarSesion = function IniciarSesion(email, password, callback) {
   MongoClient.connect(dbConnectionString,
@@ -120,7 +120,7 @@ exports.IniciarSesion = function IniciarSesion(email, password, callback) {
               return callback(new resultadoConsulta(false, "La clave proporcionada no es correcta."));
             }
           })
-          
+
         }
       });
     });

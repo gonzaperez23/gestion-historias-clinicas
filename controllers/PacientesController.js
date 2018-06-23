@@ -244,17 +244,20 @@ router.post('/paciente', mid.requiresLogin, function (req, res, next) {
 
       generalServices.InsertarRegistro('pacientes', model, function (response) {
         var insertRespuesta = response.respuesta;
-        var result = swig.renderFile('views/pacientes/paciente.html', {
-          model: model,
-          pageTitle: 'Nuevo paciente',
-          resultado: new resultado(true, insertRespuesta),
-          obrassociales: this.obrassociales,
-          grupossanguineos: this.grupossanguineos,
-          provincias: this.provincias,
-          userRol: req.session.rol, userName: req.session.email
-        });
 
-        res.send(result);
+        generalServices.InsertarPacienteSinHc(model, function (response) { 
+          var result = swig.renderFile('views/pacientes/paciente.html', {
+            model: model,
+            pageTitle: 'Nuevo paciente',
+            resultado: new resultado(true, insertRespuesta),
+            obrassociales: this.obrassociales,
+            grupossanguineos: this.grupossanguineos,
+            provincias: this.provincias,
+            userRol: req.session.rol, userName: req.session.email
+          });
+  
+          res.send(result);
+        });
       });
     } else {
       obtenerObjetoActual(model, function (response) {

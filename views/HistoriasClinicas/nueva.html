@@ -1,0 +1,70 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">
+            <i class="fa fa-files-o"></i> NUEVA HISTORIA CLINICA
+        </h3>
+        <ol class="breadcrumb">
+            <li>
+                <i class="icon_house_alt"></i>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <i class="icon_documents_alt">
+
+                </i>
+                <a href="/historias-clinicas">Historias clinicas</a>
+            </li>
+            </a>
+            <li>
+                <i class="fa fa-files-o"></i>Nueva historia clinica
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Form validations -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="panel">
+            <header class="panel-heading">
+                COMPLETE LOS DATOS NECESARIOS
+            </header>
+            <div class="panel-body">
+                <div class="form">
+                    <form class="form-validate form-horizontal" id="FormUsuario" method="post" action="/historias-clinicas/nueva">
+                        <div class="form-group col-lg-12">
+                            <p>Para dar de alta una nueva historia clinica debe ingresar el DNI del paciente al que se le asignará
+                                dicha historia clinica.</p>
+                            <p>Si el cliente ya posee una historia clínica en el sistema, se deberá trabajar sobre dicha historia
+                                clínica y no podrá crearse otra.</p>
+
+                            {% if resultado != null %}
+                            <div class="alert {% if resultado.resultado == true %} alert-success {% else %} alert-danger {% endif %}">
+                                <strong>¡{{resultado.mensaje}}!</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group ">
+                            <label for="dni" class="control-label col-lg-2">
+                                DNI
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-lg-6">
+                                <input class="form-control" id="dni" name="dni" type="text" value="{%if (model != null)%}{{model.dni}}{%endif%}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button class="btn btn-primary" type="submit">GUARDAR</button>
+                                <button class="btn btn-default" onclick="location.href = '/historias-clinicas'">VOLVER</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script src="/usuarios.js"></script> {% endblock %}

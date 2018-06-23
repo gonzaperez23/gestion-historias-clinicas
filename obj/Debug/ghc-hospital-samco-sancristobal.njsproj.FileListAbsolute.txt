@@ -1,0 +1,3 @@
+F:\Repositorios\UNIR\ghc-hospital-samco-san-cristobal\obj\Debug\ghc-hospital-samco-sancristobal.njsprojAssemblyReference.cache
+F:\Repositorios\UNIR\ghc-hospital-samco-san-cristobal\obj\Debug\ghc-hospital-samco-sancristobal.njsproj.CoreCompileInputs.cache
+F:\Repositorios\UNIR\ghc-hospital-samco-san-cristobal\bin\Microsoft.NodejsTools.WebRole.dll

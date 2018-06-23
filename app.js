@@ -37,6 +37,7 @@ var medicamentos = require('./controllers/MedicamentosController');
 var causasinternacion = require('./controllers/CausasInternacionController');
 var usuarios = require('./controllers/UsuariosController');
 var pacientes = require('./controllers/PacientesController');
+var historiasClinicas = require('./controllers/HistoriasClinicasController');
 
 app.use('/', index);
 app.use('/login', login);
@@ -45,6 +46,7 @@ app.use('/medicamentos', medicamentos);
 app.use('/causas-internacion', causasinternacion);
 app.use('/usuarios', usuarios);
 app.use('/pacientes', pacientes);
+app.use('/historias-clinicas', historiasClinicas);
 
 app.listen(4545);
 

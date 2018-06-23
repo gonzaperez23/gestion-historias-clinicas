@@ -892,6 +892,7 @@ div[data-role="editor-toolbar"] {
   position: relative;  
   margin: 0 0 19px 0;
   overflow: hidden;
+  height: auto;
 }
 .breadcrumb li {
   position: relative;
