@@ -5,21 +5,42 @@ var swig = require('swig');
 var historiaClinica = require('../models/historiaClinica');
 var resultado = require('../models/resultado');
 var historiasClinicasServices = require('../services/HistoriaClinicaServices');
+var generalServices = require('../services/GeneralServices');
 var mid = require('../middlewares/login');
 
-var tiposMedicamentos = null;
+var causasinternacion = undefined;
+var tiposinternacion = undefined;
 
 //Inicio métodos Generales
+function getGeneralParameters(callback) {
+  if (this.causasinternacion == undefined || this.tiposinternacion == undefined) {
+    generalServices.ObtenerRegistros('causas-internacion', function (response) {
+      if (response.estado == true) {
+        this.causasinternacion = response.respuesta;
+      }
+      generalServices.ObtenerRegistros('tipos-internacion', function (response) {
+        if (response.estado == true) {
+          this.tiposinternacion = response.respuesta;
+        }
+
+        callback();
+      });
+    });
+  }
+  else {
+    callback();
+  }
+}
 //Fin métodos Generales
 
 //Inicio métodos AJAX
 router.get('/ajaxGetInternaciones/:dniPaciente', function (req, res) {
   var tempArray = [];
-  tempArray.push({ id: 1, FechaInternacion: '12/03/2018', MotivoInternacion: "Prueba 1"});
-  tempArray.push({ id: 2, FechaInternacion: '13/03/2018', MotivoInternacion: "Prueba 2"});
-  tempArray.push({ id: 3, FechaInternacion: '14/03/2018', MotivoInternacion: "Prueba 3"});
-  tempArray.push({ id: 4, FechaInternacion: '15/03/2018', MotivoInternacion: "Prueba 4"});
-  tempArray.push({ id: 5, FechaInternacion: '16/03/2018', MotivoInternacion: "Prueba 5"});
+  tempArray.push({ id: 1, FechaInternacion: '12/03/2018', MotivoInternacion: "Prueba 1" });
+  tempArray.push({ id: 2, FechaInternacion: '13/03/2018', MotivoInternacion: "Prueba 2" });
+  tempArray.push({ id: 3, FechaInternacion: '14/03/2018', MotivoInternacion: "Prueba 3" });
+  tempArray.push({ id: 4, FechaInternacion: '15/03/2018', MotivoInternacion: "Prueba 4" });
+  tempArray.push({ id: 5, FechaInternacion: '16/03/2018', MotivoInternacion: "Prueba 5" });
   res.send(tempArray);
 
   // generalServices.ObtenerRegistros('internaciones', req.params.dniPaciente, function (response) {
@@ -63,7 +84,8 @@ router.post('/nueva', mid.requiresLogin, function (req, res, next) {
     id: 0,
     dniPaciente: parseInt(req.body.dni),
     codMedico: parseInt(req.session.userId),
-    fechaCreacion: new Date()
+    fechaCreacion: new Date(),
+    idInternacionActual: 0
   }
 
   historiasClinicasServices.InsertarRegistro('historias-clinicas', histClinica, function (response) {
@@ -96,8 +118,8 @@ router.post('/nueva', mid.requiresLogin, function (req, res, next) {
 });
 
 router.get('/historia-clinica/:dniPaciente', function (req, res, next) {
-//router.get('/historia-clinica/:dniPaciente', mid.requiresLogin, function (req, res, next) {
-  var dniPaciente = req.body.dniPaciente;
+  //router.get('/historia-clinica/:dniPaciente', mid.requiresLogin, function (req, res, next) {
+  var dniPaciente = parseInt(req.params.dniPaciente);
 
   historiasClinicasServices.BuscarHistoriaClinica(dniPaciente, function (response) {
     var result = swig.renderFile('views/historiasclinicas/historiaclinica.html', {
@@ -106,8 +128,54 @@ router.get('/historia-clinica/:dniPaciente', function (req, res, next) {
       historiaClinica: response.respuesta,
       pageTitle: 'Historias clínicas',
     });
-  
+
     res.send(result);
+  });
+});
+
+router.get('/historia-clinica/internacion/:dniPaciente', function (req, res, next) {
+  //router.get('/historia-clinica/:dniPaciente', mid.requiresLogin, function (req, res, next) {
+  var dniPaciente = parseInt(req.params.dniPaciente);
+  swig.invalidateCache();
+
+  getGeneralParameters(function () {
+    historiasClinicasServices.BuscarHistoriaClinica(dniPaciente, function (response) {
+      var histClinica = response.respuesta;
+      var result = null;
+
+      result = swig.renderFile('views/historiasclinicas/internacion.html', {
+        userRol: req.session.rol,
+        userName: req.session.email,
+        causasinternacion: this.causasinternacion,
+        historiaClinica: histClinica,
+        pageTitle: 'Internación',
+      });
+
+      res.send(result);
+    });
+  });
+});
+
+router.post('/historia-clinica/internacion/:dniPaciente', function (req, res, next) {
+  //router.get('/historia-clinica/:dniPaciente', mid.requiresLogin, function (req, res, next) {
+  var dniPaciente = req.body.dniPaciente;
+  swig.invalidateCache();
+
+  getGeneralParameters(function () {
+    historiasClinicasServices.BuscarHistoriaClinica(dniPaciente, function (response) {
+      var histClinica = response.respuesta;
+      var result = null;
+
+      result = swig.renderFile('views/historiasclinicas/internacion.html', {
+        userRol: req.session.rol,
+        userName: req.session.email,
+        causasinternacion: this.causasinternacion,
+        historiaClinica: histClinica,
+        pageTitle: 'Internación',
+      });
+
+      res.send(result);
+    });
   });
 });
 //Fin métodos Router

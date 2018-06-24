@@ -1,0 +1,222 @@
+{% extends '../Shared/layout.html' %} {% block title %}{{pageTitle}}{% endblock %} {% block style %}
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" /> {% endblock %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header">
+            <i class="fa fa-files-o"></i> HISTORIA CLINICA
+        </h3>
+        <ol class="breadcrumb">
+            <li>
+                <i class="icon_house_alt"></i>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                <i class="icon_documents_alt">
+
+                </i>
+                <a href="/historias-clinicas">Historias clinicas</a>
+            </li>
+            <li>
+                <i class="icon_document_alt">
+
+                </i>
+                <a href="/historias-clinicas/historia-clinica/{{historiaClinica.paciente.dni}}">Paciente {{historiaClinica.paciente.nombre}} {{historiaClinica.paciente.apellido}}</a>
+            </li>
+            </a>
+            <li>
+                <i class="fa fa-files-o"></i> Internacion
+            </li>
+        </ol>
+    </div>
+</div>
+<!-- Form validations -->
+<div class="row">
+    <div class="col-lg-12">
+        <form id="FormInternaciones" class="form-validate form-horizontal" method="post" action="/historias-clinicas/historia-clinica/internacion">
+            <section class="panel">
+                <header class="panel-heading">
+                    {% if (historiaClinica.idInternacionActual == 0) %} NUEVA {%else%} EDITAR {%endif%} INTERNACIÓN
+                </header>
+                <div class="panel-body">
+                    <div class="container row">
+                        <input id="id" name="id" value="{%if (model != null)%}{{model.id}}{%endif%}" hidden/>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group row">
+                                <label for="causainternacion" class="control-label col-lg-4">MOTIVO DE LA INTERNACIÓN
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <select name="causainternacion" id="causainternacion" class="form-control">
+                                        <option value="">Seleccione un valor...</option>
+                                        {% for causa in causasinternacion %}
+                                        <option value="{{causa.NombreCausa}}" {%if (model != null)%} {%if (model.nombreCausa == causa.NombreCausa)%} selected {%endif%}{%endif%}>
+                                            {{causa.NombreCausa}}
+                                        </option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="tipointernacion" class="control-label col-lg-4">TIPO DE INTERNACIÓN
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <select name="tipointernacion" id="tipointernacion" class="form-control">
+                                        <option value="">Seleccione un valor...</option>
+                                        {% for tipo in tiposinternacion %}
+                                        <option value="{{tipo.NombreTipo}}" {%if (model != null)%} {%if (model.tipointernacion == tipo.NombreTipo)%} selected {%endif%}{%endif%}>
+                                            {{tipo.NombreTipo}}
+                                        </option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="descripcionInternacion" class="control-label col-lg-4">DESCRIPCIÓN DE LA INTERNACION
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="descripcionInternacion" name="descripcionInternacion" type="text">{%if (model != null)%}{{model.descripcionInternacion}}{%endif%}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="diagnosticoPrincipal" class="control-label col-lg-4">DIAGNÓSTICO PRESUNTIVO PRINCIPAL
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="diagnosticoPrincipal" name="diagnosticoPrincipal" type="text">{%if (model != null)%}{{model.diagnosticoPrincipal}}{%endif%}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="diagnosticoSecundario" class="control-label col-lg-4">DIAGNÓSTICO PRESUNTIVO SECUNDARIO
+                                </label>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="diagnosticoSecundario" name="diagnosticoSecundario" type="text">{%if (model != null)%}{{model.diagnosticoSecundario}}{%endif%}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="seccionQuirurgica" hidden>
+                <header class="panel-heading">
+                    DATOS DE LA INTERVENCIÓN QUIRÚRGICA
+                </header>
+                <div class="panel-body">
+                    <div class="container row">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group row">
+                                <label for="intervencionRealizada" class="control-label col-lg-4">INTERVENCIÓN REALIZADA
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="intervencionRealizada" name="intervencionRealizada" type="text" value="{%if (model != null)%}{{model.intervencionRealizada}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="fechaintervencion" class="control-label col-lg-4">FECHA REALIZACIÓN
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="fechaintervencion" name="fechaintervencion" type="date" value="{%if (model != null)%}{{model.fechaintervencion}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="nombreCirujano" class="control-label col-lg-4">NOMBRE CIRUJANO
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="nombreCirujano" name="nombreCirujano" type="text" value="{%if (model != null)%}{{model.nombreCirujano}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="nombreAyudante1" class="control-label col-lg-4">NOMBRE AYUDANTE 1
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="nombreAyudante1" name="nombreAyudante1" type="text" value="{%if (model != null)%}{{model.nombreAyudante1}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="nombreAyudante2" class="control-label col-lg-4">NOMBRE AYUDANTE 2
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="nombreAyudante2" name="nombreAyudante2" type="text" value="{%if (model != null)%}{{model.nombreAyudante2}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="nombreAnestesista" class="control-label col-lg-4">NOMBRE ANESTESISTA
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="nombreAnestesista" name="nombreAnestesista" type="text" value="{%if (model != null)%}{{model.nombreAnestesista}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="nombreAnestesista" class="control-label col-lg-4">NOMBRE HEMOTERAPIA
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="nombreHemoterapia" name="nombreHemoterapia" type="text" value="{%if (model != null)%}{{model.nombreHemoterapia}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="nombreAnestesista" class="control-label col-lg-4">NOMBRE PEDIATRA
+                                </label>
+                                <div class="col-lg-6">
+                                    <input class="form-control" id="nombrePediatra" name="nombrePediatra" type="text" value="{%if (model != null)%}{{model.nombrePediatra}}{%endif%}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="protocoloQuirurgico" class="control-label col-lg-4">PROTOCOLO QUIRÚRGICO
+                                </label>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="protocoloQuirurgico" name="protocoloQuirurgico" type="text">{%if (model != null)%}{{model.protocoloQuirurgico}}{%endif%}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="prescripcionesMedicas" class="control-label col-lg-4">PRESCRIPCIONES MÉDICAS
+                                </label>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="prescripcionesMedicas" name="prescripcionesMedicas" type="text">{%if (model != null)%}{{model.prescripcionesMedicas}}{%endif%}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="panel">
+                <header class="panel-heading">
+                    DATOS DE LAS PRESCRIPCIONES MÉDICAS
+                </header>
+                <div class="panel-body">
+                    <div class="container row">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group row">
+                                <label for="prescripcionesMedicas" class="control-label col-lg-4">PRESCRIPCIONES MÉDICAS
+                                </label>
+                                <div class="col-lg-6">
+                                    <textarea class="form-control" id="prescripcionesMedicas" name="prescripcionesMedicas" type="text" rows="6">
+                                        {%if (model != null)%}{{model.prescripcionesMedicas}}{%endif%}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <button class="btn btn-primary" type="submit">GUARDAR</button>
+                    <a class="btn btn-default" href='/historias-clinicas/historia-clinica/{{historiaClinica.paciente.dni}}'>VOLVER</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %} {% block javascript %}
+<script src="/internaciones.js"></script> {% endblock %}

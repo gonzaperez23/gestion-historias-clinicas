@@ -13,21 +13,29 @@ exports.BuscarHistoriaClinica = function BuscarHistoriaClinica(dniPaciente, call
         function (err, db) {
             if (err) throw err;
 
-            var pacFiltrer = { dni: dniPaciente };
+            var pacFiltrer = { dniPaciente: dniPaciente };
             db.collection('historias-clinicas').findOne(pacFiltrer, function (err, result) {
                 if (err) {
                     db.close();
                     callback(new resultadoConsulta(false, "Ocurrio un error al buscar la historia clínica."));
                 } else {
-                    var histClinica = new historiaClinica(result.id, result.dniPaciente, result.codMedico, result.fechaCreacion);
+                    var histClinica = new historiaClinica(result.id, result.dniPaciente, result.codMedico, result.fechaCreacion, result.idInternacionActual);
 
-                    db.collection('pacientes').findOne({dni :result.dniPaciente}, function (err, result) {
+                    db.collection('pacientes').findOne({dni: dniPaciente}, function (err, result) {
                         if (err) {
                             db.close();
                             callback(new resultadoConsulta(false, "Ocurrio un error al buscar la historia clínica."));
                         } else { 
                             histClinica.paciente = result;
-                            callback(new resultadoConsulta(true, histClinica));
+
+                            if (histClinica.idInternacionActual != 0) {
+                                db.collection('internaciones').findOne({id :histClinica.id}, function (err, result) {
+                                    histClinica.internacionActual = result;
+                                });
+                            } else {
+                                histClinica.internacionActual = null;
+                                callback(new resultadoConsulta(true, histClinica));
+                            }
                         }
                     });
                 }
