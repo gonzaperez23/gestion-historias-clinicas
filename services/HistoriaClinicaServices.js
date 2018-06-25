@@ -2,6 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 var dbConnectionString = 'mongodb://gperez:2312carla1992@ds241019.mlab.com:41019/gestor-historias-clinicas';
 
 var historiaClinica = require('../models/historiaClinica');
+var internacion = require('../models/internacion');
 
 function resultadoConsulta(estado, respuesta) {
     this.estado = estado;
@@ -21,16 +22,17 @@ exports.BuscarHistoriaClinica = function BuscarHistoriaClinica(dniPaciente, call
                 } else {
                     var histClinica = new historiaClinica(result.id, result.dniPaciente, result.codMedico, result.fechaCreacion, result.idInternacionActual);
 
-                    db.collection('pacientes').findOne({dni: dniPaciente}, function (err, result) {
+                    db.collection('pacientes').findOne({ dni: dniPaciente }, function (err, result) {
                         if (err) {
                             db.close();
                             callback(new resultadoConsulta(false, "Ocurrio un error al buscar la historia clínica."));
-                        } else { 
+                        } else {
                             histClinica.paciente = result;
 
                             if (histClinica.idInternacionActual != 0) {
-                                db.collection('internaciones').findOne({id :histClinica.id}, function (err, result) {
+                                db.collection('internaciones').findOne({ id: histClinica.idInternacionActual }, function (err, result) {
                                     histClinica.internacionActual = result;
+                                    callback(new resultadoConsulta(true, histClinica));
                                 });
                             } else {
                                 histClinica.internacionActual = null;
@@ -39,6 +41,104 @@ exports.BuscarHistoriaClinica = function BuscarHistoriaClinica(dniPaciente, call
                         }
                     });
                 }
+            });
+        });
+};
+
+exports.BuscarDetalleInternacionCompleta = function BuscarDetalleInternacionCompleta(id, callback) {
+    MongoClient.connect(dbConnectionString,
+        function (err, db) {
+            if (err) throw err;
+
+            db.collection('internaciones').findOne({id: id}, function (err, result) {
+                if (err) {
+                    db.close();
+                    callback(new resultadoConsulta(false, "Ocurrio un error al buscar la historia clínica."));
+                } else {
+                    var intern = new internacion(result.id, result.dniPaciente, result.idHistoriaClinica, result.causainternacion, result.tipointernacion,
+                        result.descripcionInternacion, result.diagnosticoPrincipal, result.diagnosticoSecundario, result.intervencionRealizada,
+                        result.diasEstimativos, result.fechaIntervencion, result.nombreCirujano, result.nombreAyudante1, result.nombreAyudante2, result.nombreAnestesista,
+                        result.nombreHemoterapia, result.nombrePediatra, result.protocoloQuirurgico, result.prescripcionesMedicas)
+                    intern.fechaInternacion = result.fechaInternacion;
+                    intern.fechaAltaInternacion = result.fechaAltaInternacion;
+
+                    db.collection('pacientes').findOne({ dni: intern.dniPaciente }, function (err, result) {
+                        if (err) {
+                            db.close();
+                            callback(new resultadoConsulta(false, "Ocurrio un error al buscar la historia clínica."));
+                        } else {
+                            intern.paciente = result;
+
+                            callback(new resultadoConsulta(true, intern));
+                        }
+                    });
+                }
+            });
+        });
+}
+
+exports.AltaInternacion = function AltaInternacion(id, callback) {
+    MongoClient.connect(dbConnectionString, function (err, db) {
+        if (err) throw err;
+        db.collection('internaciones').update({ "id": id },
+            { $set: { "fechaAltaInternacion": new Date().toLocaleDateString() } }, function (err, result) {
+                if (err) {
+                    db.close();
+                    callback(new resultadoConsulta(false, "No se pudo dar de alta al paciente"));
+                }
+                else {
+                    db.collection('internaciones').findOne({ id: id }, function (err, value) {
+                        db.collection('historias-clinicas').update({ "id": value.idHistoriaClinica },
+                            { $set: { "idInternacionActual": 0 } }, function (err, result) {
+                                if (err) {
+                                    db.close();
+                                    callback(new resultadoConsulta(false, "No se pudo dar de alta al paciente"));
+                                }
+                                else {
+                                    db.close();
+                                    callback(new resultadoConsulta(true, "Los datos se han guardado correctamente"));
+                                }
+                            });
+                    });
+                }
+            });
+    });
+}
+
+exports.GuardarInternacion = function GuardarInternacion(objeto, callback) {
+    MongoClient.connect(dbConnectionString,
+        function (err, db) {
+            if (err) throw err;
+
+            var mysort = { id: -1 };
+            db.collection('internaciones').find().sort(mysort).toArray(function (err, value) {
+                if (value.length > 0) {
+                    objeto.id = value[0].id + 1;
+                } else {
+                    objeto.id = 1;
+                }
+
+                objeto.fechaInternacion = new Date().toLocaleDateString();
+                objeto.fechaAltaInternacion = "";
+                db.collection('internaciones').insert(objeto, function (err, result) {
+                    if (err) {
+                        db.close();
+                        callback(new resultadoConsulta(false, "Los datos no han podido guardarse por un error interno del servidor"));
+                    }
+                    else {
+                        db.collection('historias-clinicas').update({ "id": objeto.idHistoriaClinica },
+                            { $set: { "idInternacionActual": objeto.id } }, function (err, result) {
+                                if (err) {
+                                    db.close();
+                                    callback(new resultadoConsulta(false, "Los datos no han podido guardarse por un error interno del servidor"));
+                                }
+                                else {
+                                    db.close();
+                                    callback(new resultadoConsulta(true, "Los datos se han guardado correctamente"));
+                                }
+                            });
+                    }
+                });
             });
         });
 };

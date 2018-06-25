@@ -17,9 +17,15 @@
                 </i>
                 <a href="/historias-clinicas">Historias clinicas</a>
             </li>
+            <li>
+                <i class="icon_document_alt">
+
+                </i>
+                <a href="/historias-clinicas/historia-clinica/{{model.paciente.dni}}">Paciente {{model.paciente.nombre}} {{model.paciente.apellido}}</a>
+            </li>
             </a>
             <li>
-                <i class="fa fa-files-o"></i> Historia clinica
+                <i class="fa fa-files-o"></i> Detalle internacion
             </li>
         </ol>
     </div>
@@ -38,34 +44,33 @@
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <div class="form-group">
                                     <label>DNI</label>
-                                    <input hidden id="dniPaciente" name="dniPaciente" value="{{historiaClinica.paciente.dni}}">
-                                    <br/>{{historiaClinica.paciente.dni}}
+                                    <br/>{{model.paciente.dni}}
                                 </div>
                                 <div class="form-group">
                                     <label>Nombre/Apellido</label>
-                                    <br/>{{historiaClinica.paciente.nombre}} {{historiaClinica.paciente.Apellido}}
+                                    <br/>{{model.paciente.nombre}} {{model.paciente.Apellido}}
                                 </div>
                                 <div class="form-group">
                                     <label>Resumen médico</label>
-                                    <br/>{{historiaClinica.paciente.resumenmedico}}
+                                    <br/>{{model.paciente.resumenmedico}}
                                 </div>
                                 <div class="form-group">
                                     <label>Ciudad</label>
-                                    <br/>{{historiaClinica.paciente.ciudad}}, {{historiaClinica.paciente.provincia}}
+                                    <br/>{{model.paciente.ciudad}}, {{model.paciente.provincia}}
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <div class="form-group">
                                     <label>Obra social</label>
-                                    <br/>{{historiaClinica.paciente.obrasocial}}
+                                    <br/>{{model.paciente.obrasocial}}
                                 </div>
                                 <div class="form-group">
                                     <label>Plan obra social</label>
-                                    <br/>{{historiaClinica.paciente.planobrasocial}}
+                                    <br/>{{model.paciente.planobrasocial}}
                                 </div>
                                 <div class="form-group">
                                     <label>Nro afiliado</label>
-                                    <br/>{{historiaClinica.paciente.nroafiliado}}
+                                    <br/>{{model.paciente.nroafiliado}}
                                 </div>
                             </div>
                         </div>
@@ -75,28 +80,54 @@
         </section>
         <section class="panel">
             <header class="panel-heading">
-                DETALLE DE INTERNACIONES DEL PACIENTE
+                INFORMACIÓN DE LA INTERNACIÓN
             </header>
             <div class="panel-body">
                 <div class="container row">
-                    <div class="col-md-12">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="row">
-                            {%if (historiaClinica.idInternacionActual == 0)%} {%if userRol == 'MEDICO'%}
-                            <div class="col-md-6">
-                                <a href="/historias-clinicas/historia-clinica/internacion/{{historiaClinica.paciente.dni}}" 
-                                    class="btn btn-primary btn-xs btn-block">NUEVA INTERNACIÓN</a>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label>Causa de la internación</label>
+                                    <br/>{{model.causainternacion}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipo de internación</label>
+                                    <br/>{{model.tipointernacion}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha ingreso</label>
+                                    <br/>{{model.fechaInternacion}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Fecha egreso</label>
+                                    <br/>{{model.fechaAltaInternacion}}
+                                </div>
                             </div>
-                            {%endif%} {%else%}
-                            <div class="col-md-6">
-                                <a href="/historias-clinicas/historia-clinica/internacion/{{historiaClinica.paciente.dni}}"
-                                    class="btn btn-success btn-xs btn-block">INTERNACIÓN ACTUAL</a>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label>Descripción de la internacion</label>
+                                    <br/>{{model.descripcionInternacion}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Diagnóstivo principal</label>
+                                    <br/>{{model.diagnosticoPrincipal}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Diagnóstivo secundario</label>
+                                    <br/>{{model.diagnosticoSecundario}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Prescripciones médicas</label>
+                                    <br/>{{model.prescripcionesMedicas}}
+                                </div>
                             </div>
-                            {%endif%}
                         </div>
-                        <br/>
                     </div>
-                    <div class="col-md-12">
-                        <div id="jsGrid"></div>
+                </div>
+                <div class="container row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <a class="btn btn-default" href='/historias-clinicas/historia-clinica/{{model.paciente.dni}}'>VOLVER</a>
                     </div>
                 </div>
             </div>

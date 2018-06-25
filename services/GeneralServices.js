@@ -31,8 +31,9 @@ exports.ObtenerRegistrosFiltrados = function ObtenerRegistrosFiltrados(entidad, 
       callback(new resultadoConsulta(false, "Ocurrio un error al comunicarse con la base de datos"));
     };
 
+    var mysort = { id: -1 };
     var collection = db.collection(entidad);
-    collection.find(filtros).toArray(function (err, result) {
+    collection.find(filtros).sort(mysort).toArray(function (err, result) {
       if (err) throw err;
       db.close();
 

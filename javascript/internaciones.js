@@ -4,8 +4,8 @@ var minMessage = "Debe haber como mínimo";
 var maxMessage = "Debe haber como máximo";
 var equalMessage = "El valor debe ser igual al campo";
 
-$(document).ready(function(){
-    $("#tipointernacion").change();    
+$(document).ready(function () {
+    $("#tipointernacion").change();
 })
 
 $("#tipointernacion").on('change', function () {
@@ -13,7 +13,10 @@ $("#tipointernacion").on('change', function () {
         $("#intervencionRealizada").val("-");
         $("#seccionQuirurgica").hide();
     } else {
-        $("#intervencionRealizada").val("");
+        if ($("#intervencionRealizada").val() != "") { }
+        else {
+            $("#intervencionRealizada").val("");
+        }
         $("#seccionQuirurgica").show();
     }
 });
@@ -21,8 +24,11 @@ $("#tipointernacion").on('change', function () {
 //Validation
 var Script = function () {
     $.validator.setDefaults({
-        submitHandler: function () { 
-            $("#FormInternaciones").submit(); 
+        submitHandler: function () {
+            $.blockUI();
+            $(".form-control:disabled").removeAttr('disabled');
+            $("#FormInternaciones").submit();
+            $.unblockUI();
         }
     });
     $().ready(function () {

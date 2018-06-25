@@ -26,8 +26,10 @@ function controlPermisosUsuario(rolUsuario, url) {
             var urlBase = "";
             var arrayUrl = url.split("/");
             if (arrayUrl.length > 2) {
-                for (var i = 1; i < arrayUrl.length - 1; i++) {
-                    urlBase += "/" + arrayUrl[i];
+                for (var i = 1; i < arrayUrl.length; i++) {
+                    if (isNaN(parseInt(arrayUrl[i]))) {
+                        urlBase += "/" + arrayUrl[i];
+                    } 
                 }
             }
             else {
