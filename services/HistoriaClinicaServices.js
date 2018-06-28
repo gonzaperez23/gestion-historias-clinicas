@@ -1,7 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 var dbConnectionString = 'mongodb://gperez:2312carla1992@ds241019.mlab.com:41019/gestor-historias-clinicas';
 
-var historiaClinica = require('../models/historiaClinica');
+var historiaClinica = require('../models/historiaclinica');
 var internacion = require('../models/internacion');
 
 function resultadoConsulta(estado, respuesta) {
