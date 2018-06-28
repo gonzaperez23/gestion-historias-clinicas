@@ -4,6 +4,12 @@
 
 {% block content %}
 <form class="form-validate form-horizontal" id="FormLogin" method="post" action="/login/login">
+    <input hidden id="url" name="url" value="{{originalUrl}}"/>
+    {% if resultado != null %}
+        <div class="alert {% if resultado.resultado == true %} alert-success {% else %} alert-danger {% endif %}">
+            <strong>¡{{resultado.mensaje}}!</strong>
+        </div>
+    {% endif %}
     <div class="form-group ">
         <label for="email" class="control-label col-lg-2">EMAIL
             <span class="required">*</span>

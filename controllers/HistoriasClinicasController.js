@@ -2,30 +2,24 @@ var express = require('express');
 var router = express.Router();
 var swig = require('swig');
 
-
+var registroenfermeria = require('../models/registroenfermeria');
 var internacion = require('../models/internacion');
 var resultado = require('../models/resultado');
 var historiasClinicasServices = require('../services/HistoriaClinicaServices');
 var generalServices = require('../services/GeneralServices');
 var mid = require('../middlewares/login');
 
-var causasinternacion = undefined;
-var tiposinternacion = undefined;
+var medicamentos = undefined;
 
 //Inicio métodos Generales
 function getGeneralParameters(callback) {
-  if (this.causasinternacion == undefined || this.tiposinternacion == undefined) {
-    generalServices.ObtenerRegistros('causas-internacion', function (response) {
+  if (this.medicamentos == undefined) {
+    generalServices.ObtenerRegistros('medicamentos', function (response) {
       if (response.estado == true) {
-        this.causasinternacion = response.respuesta;
+        this.medicamentos = response.respuesta;
       }
-      generalServices.ObtenerRegistros('tipos-internacion', function (response) {
-        if (response.estado == true) {
-          this.tiposinternacion = response.respuesta;
-        }
 
-        callback();
-      });
+      callback();
     });
   }
   else {
@@ -35,6 +29,30 @@ function getGeneralParameters(callback) {
 //Fin métodos Generales
 
 //Inicio métodos AJAX
+router.get('/ajaxGetHistoriasClinicas', function (req, res) {
+  var filtro = {};
+  var filtroNot = { idInternacionActual: { $ne: 0 } };
+  if (req.session.rol == 'MEDICO') {
+    filtro.codMedico = req.session.userId;
+    historiasClinicasServices.BuscarHistoriasClinicasFiltradas(filtro, function (response) {
+      if (response.estado == true) { res.send(response.respuesta); }
+    });
+  } else if (req.session.rol = 'ENFERMERO') {
+    historiasClinicasServices.BuscarHistoriasClinicasFiltradas(filtroNot, function (response) {
+      if (response.estado == true) { res.send(response.respuesta); }
+    });
+  }
+});
+
+router.get('/ajaxGetRegistrosEnfermeria/:id', function (req, res) {
+  var filtro = {};
+  filtro.idInternacion = parseInt(req.params.id);
+
+  generalServices.ObtenerRegistrosFiltrados('registros-enfermeria', filtro, function (response) {
+    if (response.estado == true) { res.send(response.respuesta); } else { res.send(null); }
+  });
+});
+
 router.get('/ajaxGetInternaciones/:dniPaciente', function (req, res) {
   var filtro = {};
   filtro.dniPaciente = parseInt(req.params.dniPaciente);
@@ -43,7 +61,6 @@ router.get('/ajaxGetInternaciones/:dniPaciente', function (req, res) {
     if (response.estado == true) { res.send(response.respuesta); } else { res.send(null); }
   });
 });
-
 //Fin métodos AJAX
 
 //Inicio métodos Router
@@ -207,6 +224,64 @@ router.post('/historia-clinica/internacion/', mid.requiresLogin, function (req, 
       res.redirect("/historias-clinicas/historia-clinica/" + modelInternacion.dniPaciente);
     }
   });
+});
+
+router.get('/internacion/registro-enfermeria/:idInternacion/:dniPaciente/:id?', mid.requiresLogin, function (req, res, next) {
+  getGeneralParameters(function () {
+    if (req.params.id != null && req.params.id != undefined) {
+      generalServices.ObtenerRegistrosFiltrados('registros-enfermeria', { id: parseInt(req.params.id) }, function (response) {
+        var result = swig.renderFile('views/historiasclinicas/registroenfermeria.html', {
+          userRol: req.session.rol,
+          userName: req.session.email,
+          model: response.respuesta[0],
+          medicamentos: this.medicamentos,
+          resultado: null,
+          pageTitle: 'Registro enfermeria',
+        });
+
+        res.send(result);
+      });
+    }
+    else {
+      var result = swig.renderFile('views/historiasclinicas/registroenfermeria.html', {
+        userRol: req.session.rol,
+        userName: req.session.email,
+        model: { id: 0, idInternacion: req.params.idInternacion, dniPaciente: req.params.dniPaciente },
+        medicamentos: this.medicamentos,
+        resultado: null,
+        pageTitle: 'Registro enfermeria',
+      });
+
+      res.send(result);
+    }
+  });
+});
+
+router.post('/internacion/registro-enfermeria/', mid.requiresLogin, function (req, res, next) {
+  if (req.body.id === "0") {
+    var model = new registroenfermeria(parseInt(req.body.id), parseInt(req.body.dniPaciente), parseInt(req.body.idInternacion), 
+      req.body.medicamento, req.body.dosis, req.body.fecharegistro, req.body.horaregistro, "", req.body.observaciones)
+    generalServices.InsertarRegistro('registros-enfermeria', model, function (response) {
+      if (response.estado == false) {
+        var result = swig.renderFile('views/historiasclinicas/registroenfermeria.html', {
+          userRol: req.session.rol,
+          userName: req.session.email,
+          model: { id: 0, idInternacion: req.params.idInternacion, dniPaciente: req.params.dniPaciente },
+          medicamentos: this.medicamentos,
+          resultado: null,
+          pageTitle: 'Registro enfermeria',
+        });
+
+        res.send(result);
+      } else {
+        res.redirect("/historias-clinicas/historia-clinica/detalle-internacion/" + model.idInternacion);
+      }
+    });
+  } else {
+    historiasClinicasServices.BajaRegistroEnfermeria(parseInt(req.body.id), req.body.motivoEliminacion, function() {
+      res.redirect("/historias-clinicas/historia-clinica/detalle-internacion/" + req.body.idInternacion);
+    });
+  }
 });
 //Fin métodos Router
 

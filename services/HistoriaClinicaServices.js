@@ -9,6 +9,38 @@ function resultadoConsulta(estado, respuesta) {
     this.respuesta = respuesta;
 }
 
+exports.BuscarHistoriasClinicasFiltradas = function BuscarHistoriasClinicasFiltradas(filtros, callback) {
+    MongoClient.connect(dbConnectionString, function (err, db) {
+        if (err) {
+            callback(new resultadoConsulta(false, "Ocurrio un error al comunicarse con la base de datos"));
+        };
+
+        db.collection('pacientes').find({}).toArray(function (err, result) {
+            if (err) { throw err; db.close() };
+
+            var pacientesList = result;
+            db.collection('historias-clinicas').find(filtros).sort({ id: -1 }).toArray(function (err, result) {
+                if (err) throw err;
+                db.close();
+
+                var resultFinal = [];
+                result.forEach(element => {
+                    var histClinica = new historiaClinica(element.id, element.dniPaciente, element.codMedico, element.fechaCreacion.toLocaleDateString(), element.idInternacionActual);
+                    pacientesList.forEach(paciente => {
+                        if (histClinica.dniPaciente == paciente.dni) {
+                            histClinica.paciente = paciente;
+                        }
+                    });
+
+                    resultFinal.push(histClinica);
+                });
+
+                callback(new resultadoConsulta(true, resultFinal));
+            });
+        });
+    })
+}
+
 exports.BuscarHistoriaClinica = function BuscarHistoriaClinica(dniPaciente, callback) {
     MongoClient.connect(dbConnectionString,
         function (err, db) {
@@ -50,7 +82,7 @@ exports.BuscarDetalleInternacionCompleta = function BuscarDetalleInternacionComp
         function (err, db) {
             if (err) throw err;
 
-            db.collection('internaciones').findOne({id: id}, function (err, result) {
+            db.collection('internaciones').findOne({ id: id }, function (err, result) {
                 if (err) {
                     db.close();
                     callback(new resultadoConsulta(false, "Ocurrio un error al buscar la historia clínica."));
@@ -76,6 +108,30 @@ exports.BuscarDetalleInternacionCompleta = function BuscarDetalleInternacionComp
             });
         });
 }
+
+exports.BajaRegistroEnfermeria = function BajaRegistroEnfermeria(id, motivoBaja, callback) {
+    MongoClient.connect(dbConnectionString, function (err, db) {
+        if (err) throw err;
+        db.collection('registros-enfermeria').update({ "id": id },
+            { $set: { "eliminado": "SI", "motivoEliminacion": motivoBaja } }, function (err, result) {
+                if (err) {
+                    db.close();
+                    callback(new resultadoConsulta(false, "No se pudo dar de baja el registro de enfermería"));
+                }
+                else {
+                    if (err) {
+                        db.close();
+                        callback(new resultadoConsulta(false, "No se pudo dar de alta al paciente"));
+                    }
+                    else {
+                        db.close();
+                        callback(new resultadoConsulta(true, "Los datos se han guardado correctamente"));
+                    }
+                }
+            });
+    });
+}
+
 
 exports.AltaInternacion = function AltaInternacion(id, callback) {
     MongoClient.connect(dbConnectionString, function (err, db) {

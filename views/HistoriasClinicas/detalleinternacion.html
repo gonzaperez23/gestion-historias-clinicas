@@ -42,6 +42,7 @@
                     <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <input id="id" name="id" value="{{model.id}}" hidden>
                                 <div class="form-group">
                                     <label>DNI</label>
                                     <br/>{{model.paciente.dni}}
@@ -125,7 +126,21 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+        <section class="panel">
+            <header class="panel-heading">
+                INFORMACIÓN DE LA INTERNACIÓN
+            </header>
+            <div class="panel-body">
                 <div class="container row">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        {%if userRol == 'ENFERMERO'%}
+                        <a class="btn btn-success" href="/historias-clinicas/internacion/registro-enfermeria/{{model.id}}/{{model.dniPaciente}}">Nuevo registro de enfermería</a>
+                        <br/><br/>
+                        {%endif%}
+                        <div id="jsGrid"></div>
+                    </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <a class="btn btn-default" href='/historias-clinicas/historia-clinica/{{model.paciente.dni}}'>VOLVER</a>
                     </div>
@@ -138,4 +153,5 @@
 {% endblock %} {% block javascript %}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
 <script src="/grid-methods-historia-clinica.js"></script>
-<script type="text/javascript" src="/historia-clinica-grid.js"></script> {% endblock %}
+<script type="text/javascript" src="/internaciones-enfermeria-grid.js"></script>
+{% endblock %}

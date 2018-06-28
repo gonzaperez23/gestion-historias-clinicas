@@ -14,6 +14,8 @@ app.use(session({
         userId: 0,
         email: null,
         rol: null,
+        userDni: 0,
+        originUrl: ''
     }
 }));
 

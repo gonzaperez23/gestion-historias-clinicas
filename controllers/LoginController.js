@@ -10,6 +10,7 @@ var generalServices = require('../services/GeneralServices');
 router.get('/login', function (req, res, next) {
   var result = swig.renderFile('views/login/login.html', {
     pageTitle: 'Iniciar sesion',
+    originalUrl: req.session.originUrl
   });
 
   res.send(result);
@@ -20,12 +21,19 @@ router.post('/login', function (req, res, next) {
     req.session.userId = resultado.respuesta.id;
     req.session.email = resultado.respuesta.email;
     req.session.rol = resultado.respuesta.rol;
+    req.session.userDni = resultado.respuesta.dni;
 
-    var result = swig.renderFile('views/login/login.html', {
-      pageTitle: 'Iniciar sesion',
-    });
-  
-    res.redirect("/");
+    if (resultado.estado == false) {
+      var result = swig.renderFile('views/login/login.html', {
+        pageTitle: 'Iniciar sesion',
+        originalUrl: url,
+        resultado: new resultado(resultado.estado, resultado.respuesta),
+      });
+
+      res.send(result);
+    } else {
+      res.redirect(req.body.url);
+    }
   });
 });
 

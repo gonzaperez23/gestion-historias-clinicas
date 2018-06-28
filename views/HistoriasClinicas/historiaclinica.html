@@ -88,8 +88,14 @@
                             </div>
                             {%endif%} {%else%}
                             <div class="col-md-6">
+                                {%if userRol == 'ENFERMERO'%}
+                                <a href="/historias-clinicas/historia-clinica/detalle-internacion/{{historiaClinica.idInternacionActual}}"
+                                    class="btn btn-success btn-xs btn-block">INTERNACIÓN ACTUAL</a>
+                                {%else%}
                                 <a href="/historias-clinicas/historia-clinica/internacion/{{historiaClinica.paciente.dni}}"
                                     class="btn btn-success btn-xs btn-block">INTERNACIÓN ACTUAL</a>
+                                {%endif%}
+                                
                             </div>
                             {%endif%}
                         </div>
@@ -107,4 +113,4 @@
 {% endblock %} {% block javascript %}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
 <script src="/grid-methods-historia-clinica.js"></script>
-<script type="text/javascript" src="/historia-clinica-grid.js"></script> {% endblock %}
+<script type="text/javascript" src="/internaciones-grid.js"></script> {% endblock %}

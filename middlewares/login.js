@@ -67,8 +67,9 @@ exports.requiresLogin = function requiresLogin(req, res, next) {
             }
         });
     } else {
+        req.session.originUrl = req.originalUrl;
         var result = swig.renderFile('views/errorlogin/index.html', {
-            mensajeError: "Necesita iniciar sesión para ver esta sección"
+            mensajeError: "Necesita iniciar sesión para ver esta sección",
         });
 
         res.send(result);
