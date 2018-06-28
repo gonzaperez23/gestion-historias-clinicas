@@ -50,6 +50,8 @@ app.use('/usuarios', usuarios);
 app.use('/pacientes', pacientes);
 app.use('/historias-clinicas', historiasClinicas);
 
-app.listen(4545);
+app.listen(process.env.PORT || 3535, function(){
+    console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+  });
 
 module.exports = app;
