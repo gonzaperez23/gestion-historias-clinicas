@@ -3,21 +3,21 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var app = express();
-//var session = require('express-session');
+var session = require('express-session');
 
 //use sessions for tracking logins
-// app.use(session({
-//     secret: 'work hard',
-//     resave: true,
-//     saveUninitialized: false,
-//     cookie: { 
-//         userId: 0,
-//         email: null,
-//         rol: null,
-//         userDni: 0,
-//         originUrl: ''
-//     }
-// }));
+app.use(session({
+    secret: 'work hard',
+    resave: true,
+    saveUninitialized: false,
+    cookie: { 
+        userId: 0,
+        email: null,
+        rol: null,
+        userDni: 0,
+        originUrl: ''
+    }
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
