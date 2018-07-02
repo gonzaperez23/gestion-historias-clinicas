@@ -1,10 +1,9 @@
 {
-  "name": "ghc-hospital-samco-san-cristobal",
-  "version": "1.0.0",
+  "name": "actividad",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node app.js",
-    "deploy": "gcloud app deploy"
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",

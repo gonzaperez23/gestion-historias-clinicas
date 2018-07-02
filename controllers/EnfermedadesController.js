@@ -79,7 +79,7 @@ router.post('/ajaxPostEliminarEnfermedad', function (req, res) {
 
 //Inicio métodos Router
 router.get('/', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/enfermedades/index.html', {
+  var result = swig.renderFile('views/Enfermedades/index.html', {
     pageTitle: 'Listado de enfermedades',
     userRol: req.session.rol, userName: req.session.email
   });
@@ -101,7 +101,7 @@ router.get('/enfermedad/:id?', mid.requiresLogin, function (req, res, next) {
         model = new enfermedad(value.id, value.NombreEnfermedad, value.EsContagiosa, value.Observaciones);
       } 
 
-      var result = swig.renderFile('views/enfermedades/enfermedad.html', {
+      var result = swig.renderFile('views/Enfermedades/enfermedad.html', {
         model: model,
         pageTitle: 'Editar enfermedad',
         userRol: req.session.rol, userName: req.session.email
@@ -110,7 +110,7 @@ router.get('/enfermedad/:id?', mid.requiresLogin, function (req, res, next) {
       res.send(result);
     });
   } else {
-    var result = swig.renderFile('views/enfermedades/enfermedad.html', {
+    var result = swig.renderFile('views/Enfermedades/enfermedad.html', {
       model: model,
       pageTitle: 'Nueva enfermedad',
       userRol: req.session.rol, userName: req.session.email
@@ -128,7 +128,7 @@ router.post('/enfermedad', mid.requiresLogin, function (req, res, next) {
       var insertEstado = response.estado;
       var insertRespuesta = response.respuesta;
 
-      result = swig.renderFile('views/enfermedades/enfermedad.html', {
+      result = swig.renderFile('views/Enfermedades/enfermedad.html', {
         model: model,
         resultado: new resultado(insertEstado, insertRespuesta),
         userRol: req.session.rol, userName: req.session.email
@@ -144,7 +144,7 @@ router.post('/enfermedad', mid.requiresLogin, function (req, res, next) {
           var insertEstado = response.estado;
           var insertRespuesta = response.respuesta;
 
-          result = swig.renderFile('views/enfermedades/enfermedad.html', {
+          result = swig.renderFile('views/Enfermedades/enfermedad.html', {
             model: model,
             resultado: new resultado(insertEstado, insertRespuesta),
             userRol: req.session.rol, userName: req.session.email
@@ -154,7 +154,7 @@ router.post('/enfermedad', mid.requiresLogin, function (req, res, next) {
         });
       }
       else {
-        result = swig.renderFile('views/enfermedades/enfermedad.html', {
+        result = swig.renderFile('views/Enfermedades/enfermedad.html', {
           model: model,
           resultado: new resultado(false, "No se pudo encontrar el registro a actualizar."),
           userRol: req.session.rol, userName: req.session.email

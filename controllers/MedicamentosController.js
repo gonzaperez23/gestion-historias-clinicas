@@ -103,7 +103,7 @@ router.post('/ajaxPostEliminarMedicamento', function (req, res) {
 
 //Inicio métodos Router
 router.get('/', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/medicamentos/index.html', {
+  var result = swig.renderFile('views/Medicamentos/index.html', {
     userRol: req.session.rol, userName: req.session.email,
     pageTitle: 'Listado de medicamentos',
   });
@@ -127,7 +127,7 @@ router.get('/medicamento/:id?', mid.requiresLogin, function (req, res, next) {
           model = new medicamento(value.id, value.NombreMedicamento, value.Concentracion, value.IdTipoMedicamento, value.NombreTipoMedicamento, value.Observaciones);
         }
 
-        result = swig.renderFile('views/medicamentos/medicamento.html', {
+        result = swig.renderFile('views/Medicamentos/medicamento.html', {
           pageTitle: 'Nuevo medicamento',
           model: model,
           resultado: null,
@@ -139,7 +139,7 @@ router.get('/medicamento/:id?', mid.requiresLogin, function (req, res, next) {
       });
     }
     else {
-      result = swig.renderFile('views/medicamentos/medicamento.html', {
+      result = swig.renderFile('views/Medicamentos/medicamento.html', {
         pageTitle: 'Nuevo medicamento',
         model: model,
         resultado: null,
@@ -166,7 +166,7 @@ router.post('/medicamento', mid.requiresLogin, function (req, res, next) {
             var insertEstado = response.estado;
             var insertRespuesta = response.respuesta;
 
-            result = swig.renderFile('views/medicamentos/medicamento.html', {
+            result = swig.renderFile('views/Medicamentos/medicamento.html', {
               pageTitle: 'Nuevo medicamento',
               model: model,
               resultado: new resultado(insertEstado, insertRespuesta),
@@ -184,7 +184,7 @@ router.post('/medicamento', mid.requiresLogin, function (req, res, next) {
                 var insertEstado = response.estado;
                 var insertRespuesta = response.respuesta;
 
-                result = swig.renderFile('views/medicamentos/medicamento.html', {
+                result = swig.renderFile('views/Medicamentos/medicamento.html', {
                   pageTitle: 'Editar medicamento',
                   model: model,
                   resultado: new resultado(insertEstado, insertRespuesta),
@@ -196,7 +196,7 @@ router.post('/medicamento', mid.requiresLogin, function (req, res, next) {
               });
             }
             else {
-              result = swig.renderFile('views/medicamentos/medicamento.html', {
+              result = swig.renderFile('views/Medicamentos/medicamento.html', {
                 pageTitle: 'Editar medicamento',
                 model: model,
                 resultado: new resultado(false, "No se pudo encontrar el registro a actualizar."),
@@ -209,7 +209,7 @@ router.post('/medicamento', mid.requiresLogin, function (req, res, next) {
           });
         }
       } else {
-        result = swig.renderFile('views/medicamentos/medicamento.html', {
+        result = swig.renderFile('views/Medicamentos/medicamento.html', {
           pageTitle: 'Nuevo medicamento',
           model: model,
           resultado: new resultado(false, "No se pudo encontrar el tipo de medicamento seleccionado."),

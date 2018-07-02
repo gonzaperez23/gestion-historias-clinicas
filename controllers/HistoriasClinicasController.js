@@ -65,7 +65,7 @@ router.get('/ajaxGetInternaciones/:dniPaciente', function (req, res) {
 
 //Inicio métodos Router
 router.get('/', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/historiasclinicas/index.html', {
+  var result = swig.renderFile('views/HistoriasClinicas/index.html', {
     userRol: req.session.rol,
     userName: req.session.email,
     pageTitle: 'Listado de historias clínicas',
@@ -75,7 +75,7 @@ router.get('/', mid.requiresLogin, function (req, res, next) {
 });
 
 router.get('/nueva', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/historiasclinicas/nueva.html', {
+  var result = swig.renderFile('views/HistoriasClinicas/nueva.html', {
     userRol: req.session.rol,
     userName: req.session.email,
 
@@ -100,7 +100,7 @@ router.post('/nueva', mid.requiresLogin, function (req, res, next) {
         if (response.estado == true) {
           res.redirect('/historias-clinicas/historia-clinica/' + histClinica.dniPaciente);
         } else {
-          result = swig.renderFile('views/historiasclinicas/nueva.html', {
+          result = swig.renderFile('views/HistoriasClinicas/nueva.html', {
             userRol: req.session.rol,
             userName: req.session.email,
             pageTitle: 'Nueva historia clínica',
@@ -111,7 +111,7 @@ router.post('/nueva', mid.requiresLogin, function (req, res, next) {
         }
       });
     } else {
-      result = swig.renderFile('views/historiasclinicas/nueva.html', {
+      result = swig.renderFile('views/HistoriasClinicas/nueva.html', {
         userRol: req.session.rol,
         userName: req.session.email,
         pageTitle: 'Nueva historia clínica',
@@ -127,7 +127,7 @@ router.get('/historia-clinica/:dniPaciente', mid.requiresLogin, function (req, r
   var dniPaciente = parseInt(req.params.dniPaciente);
 
   historiasClinicasServices.BuscarHistoriaClinica(dniPaciente, function (response) {
-    var result = swig.renderFile('views/historiasclinicas/historiaclinica.html', {
+    var result = swig.renderFile('views/HistoriasClinicas/historiaclinica.html', {
       userRol: req.session.rol,
       userName: req.session.email,
       historiaClinica: response.respuesta,
@@ -146,7 +146,7 @@ router.get('/historia-clinica/detalle-internacion/:id', mid.requiresLogin, funct
   historiasClinicasServices.BuscarDetalleInternacionCompleta(idInternacion, function (response) {
     var internacion = response.respuesta;
 
-    var result = swig.renderFile('views/historiasclinicas/detalleinternacion.html', {
+    var result = swig.renderFile('views/HistoriasClinicas/detalleinternacion.html', {
       userRol: req.session.rol,
       userName: req.session.email,
       model: internacion,
@@ -167,7 +167,7 @@ router.get('/historia-clinica/internacion/:dniPaciente', function (req, res, nex
       var histClinica = response.respuesta;
       var model = histClinica.internacionActual;
 
-      var result = swig.renderFile('views/historiasclinicas/internacion.html', {
+      var result = swig.renderFile('views/HistoriasClinicas/internacion.html', {
         userRol: req.session.rol,
         userName: req.session.email,
         causasinternacion: this.causasinternacion,
@@ -207,7 +207,7 @@ router.post('/historia-clinica/internacion/', mid.requiresLogin, function (req, 
           var histClinica = response.respuesta;
           swig.invalidateCache();
 
-          var result = swig.renderFile('views/historiasclinicas/internacion.html', {
+          var result = swig.renderFile('views/HistoriasClinicas/internacion.html', {
             userRol: req.session.rol,
             userName: req.session.email,
             causasinternacion: this.causasinternacion,
@@ -230,7 +230,7 @@ router.get('/internacion/registro-enfermeria/:idInternacion/:dniPaciente/:id?', 
   getGeneralParameters(function () {
     if (req.params.id != null && req.params.id != undefined) {
       generalServices.ObtenerRegistrosFiltrados('registros-enfermeria', { id: parseInt(req.params.id) }, function (response) {
-        var result = swig.renderFile('views/historiasclinicas/registroenfermeria.html', {
+        var result = swig.renderFile('views/HistoriasClinicas/registroenfermeria.html', {
           userRol: req.session.rol,
           userName: req.session.email,
           model: response.respuesta[0],
@@ -243,7 +243,7 @@ router.get('/internacion/registro-enfermeria/:idInternacion/:dniPaciente/:id?', 
       });
     }
     else {
-      var result = swig.renderFile('views/historiasclinicas/registroenfermeria.html', {
+      var result = swig.renderFile('views/HistoriasClinicas/registroenfermeria.html', {
         userRol: req.session.rol,
         userName: req.session.email,
         model: { id: 0, idInternacion: req.params.idInternacion, dniPaciente: req.params.dniPaciente },
@@ -263,7 +263,7 @@ router.post('/internacion/registro-enfermeria/', mid.requiresLogin, function (re
       req.body.medicamento, req.body.dosis, req.body.fecharegistro, req.body.horaregistro, "", req.body.observaciones)
     generalServices.InsertarRegistro('registros-enfermeria', model, function (response) {
       if (response.estado == false) {
-        var result = swig.renderFile('views/historiasclinicas/registroenfermeria.html', {
+        var result = swig.renderFile('views/HistoriasClinicas/registroenfermeria.html', {
           userRol: req.session.rol,
           userName: req.session.email,
           model: { id: 0, idInternacion: req.params.idInternacion, dniPaciente: req.params.dniPaciente },

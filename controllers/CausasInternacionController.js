@@ -125,7 +125,7 @@ router.post('/causainternacion', mid.requiresLogin, function (req, res, next) {
       var insertRespuesta = response.respuesta;
 
       swig.invalidateCache();
-      result = swig.renderFile('views/causasinternacion/causainternacion.html', {
+      result = swig.renderFile('views/CausasInternacion/causainternacion.html', {
         pageTitle: "Nueva causa de internación",
         model: model,
         resultado: new resultado(insertEstado, insertRespuesta),
@@ -142,7 +142,7 @@ router.post('/causainternacion', mid.requiresLogin, function (req, res, next) {
           var insertEstado = response.estado;
           var insertRespuesta = response.respuesta;
 
-          result = swig.renderFile('views/causasinternacion/causainternacion.html', {
+          result = swig.renderFile('views/CausasInternacion/causainternacion.html', {
             pageTitle: "Editar causa de internación",
             model: model,
             resultado: new resultado(insertEstado, insertRespuesta),
@@ -153,7 +153,7 @@ router.post('/causainternacion', mid.requiresLogin, function (req, res, next) {
         });
       }
       else {
-        result = swig.renderFile('views/causasinternacion/causainternacion.html', {
+        result = swig.renderFile('views/CausasInternacion/causainternacion.html', {
           model: model,
           resultado: new resultado(false, "No se pudo encontrar el registro a actualizar."),
           userRol: req.session.rol, userName: req.session.email

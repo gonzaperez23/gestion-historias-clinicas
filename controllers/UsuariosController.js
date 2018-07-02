@@ -200,7 +200,7 @@ router.post('/ajaxPostEliminarUsuario', function (req, res) {
 
 //Inicio métodos Router
 router.get('/', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/usuarios/index.html', {
+  var result = swig.renderFile('views/Usuarios/index.html', {
     pageTitle: 'Listado de usuarios',
     userRol: req.session.rol, userName: req.session.email
   });
@@ -223,7 +223,7 @@ router.get('/misdatos', mid.requiresLogin, function (req, res, next) {
           value.rolId, value.rol, value.matricula, value.especialidadId, value.especialidad, value.provincia, value.ciudad);
       }
 
-      result = swig.renderFile('views/usuarios/misdatos.html', {
+      result = swig.renderFile('views/Usuarios/misdatos.html', {
         pageTitle: 'Editar usuarios',
         model: model,
         resultado: null,
@@ -253,7 +253,7 @@ router.post('/misdatos', mid.requiresLogin, function (req, res, next) {
           });
         }
         else {
-          var result = swig.renderFile('views/usuarios/misdatos.html', {
+          var result = swig.renderFile('views/Usuarios/misdatos.html', {
             model: model,
             pageTitle: 'Nuevo usuario',
             resultado: new resultado(true, "No se pudo actualizar el registro"),
@@ -287,7 +287,7 @@ router.get('/usuario/:id?', mid.requiresLogin, function (req, res, next) {
             value.rolId, value.rol, value.matricula, value.especialidadId, value.especialidad, value.provincia, value.ciudad);
         }
 
-        result = swig.renderFile('views/usuarios/usuario.html', {
+        result = swig.renderFile('views/Usuarios/usuario.html', {
           pageTitle: 'Editar usuarios',
           model: model,
           resultado: null,
@@ -301,7 +301,7 @@ router.get('/usuario/:id?', mid.requiresLogin, function (req, res, next) {
       });
     }
     else {
-      result = swig.renderFile('views/usuarios/usuario.html', {
+      result = swig.renderFile('views/Usuarios/usuario.html', {
         pageTitle: 'Nuevo usuarios',
         model: model,
         resultado: null,
@@ -327,7 +327,7 @@ router.post('/usuario', mid.requiresLogin, function (req, res, next) {
 
       generalServices.InsertarRegistro('usuarios', model, function (response) {
         var insertRespuesta = response.respuesta;
-        var result = swig.renderFile('views/usuarios/usuario.html', {
+        var result = swig.renderFile('views/Usuarios/usuario.html', {
           model: model,
           pageTitle: 'Nuevo usuario',
           resultado: new resultado(true, insertRespuesta),
@@ -345,7 +345,7 @@ router.post('/usuario', mid.requiresLogin, function (req, res, next) {
           generalServices.ActualizarRegistro('usuarios', response, model.id, function (response) {
             var insertRespuesta = response.respuesta;
 
-            var result = swig.renderFile('views/usuarios/usuario.html', {
+            var result = swig.renderFile('views/Usuarios/usuario.html', {
               model: model,
               pageTitle: 'Nuevo usuario',
               resultado: new resultado(true, insertRespuesta),
@@ -359,7 +359,7 @@ router.post('/usuario', mid.requiresLogin, function (req, res, next) {
           });
         }
         else {
-          var result = swig.renderFile('views/usuarios/usuario.html', {
+          var result = swig.renderFile('views/Usuarios/usuario.html', {
             model: model,
             pageTitle: 'Nuevo usuario',
             resultado: new resultado(true, "No se pudo actualizar el registro"),

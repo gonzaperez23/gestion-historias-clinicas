@@ -5,7 +5,7 @@ var mid = require('../middlewares/login');
 
 //METODO GET
 router.get('/', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/home/index.html', {
+  var result = swig.renderFile('views/Home/index.html', {
     pageTitle: 'Sistema de gestión de historias clínicas',
     userRol: req.session.rol, userName: req.session.email
   });

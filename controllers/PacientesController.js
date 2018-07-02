@@ -176,7 +176,7 @@ router.post('/ajaxPostEliminarPaciente', function (req, res) {
 
 //Inicio métodos Router
 router.get('/', mid.requiresLogin, function (req, res, next) {
-  var result = swig.renderFile('views/pacientes/index.html', {
+  var result = swig.renderFile('views/Pacientes/index.html', {
     pageTitle: 'Listado de pacientes',
     userRol: req.session.rol, userName: req.session.email
   });
@@ -203,7 +203,7 @@ router.get('/paciente/:id?', mid.requiresLogin, function (req, res, next) {
             value.sexo);
         }
 
-        result = swig.renderFile('views/pacientes/paciente.html', {
+        result = swig.renderFile('views/Pacientes/paciente.html', {
           pageTitle: 'Editar pacientes',
           model: model,
           resultado: null,
@@ -217,7 +217,7 @@ router.get('/paciente/:id?', mid.requiresLogin, function (req, res, next) {
       });
     }
     else {
-      result = swig.renderFile('views/pacientes/paciente.html', {
+      result = swig.renderFile('views/Pacientes/paciente.html', {
         pageTitle: 'Nuevo pacientes',
         model: model,
         resultado: null,
@@ -246,7 +246,7 @@ router.post('/paciente', mid.requiresLogin, function (req, res, next) {
         var insertRespuesta = response.respuesta;
 
         generalServices.InsertarPacienteSinHc(model, function (response) { 
-          var result = swig.renderFile('views/pacientes/paciente.html', {
+          var result = swig.renderFile('views/Pacientes/paciente.html', {
             model: model,
             pageTitle: 'Nuevo paciente',
             resultado: new resultado(true, insertRespuesta),
@@ -265,7 +265,7 @@ router.post('/paciente', mid.requiresLogin, function (req, res, next) {
           generalServices.ActualizarRegistro('pacientes', response, model.id, function (response) {
             var insertRespuesta = response.respuesta;
 
-            var result = swig.renderFile('views/pacientes/paciente.html', {
+            var result = swig.renderFile('views/Pacientes/paciente.html', {
               model: model,
               pageTitle: 'Nuevo paciente',
               resultado: new resultado(true, insertRespuesta),
@@ -279,7 +279,7 @@ router.post('/paciente', mid.requiresLogin, function (req, res, next) {
           });
         }
         else {
-          var result = swig.renderFile('views/pacientes/paciente.html', {
+          var result = swig.renderFile('views/Pacientes/paciente.html', {
             model: model,
             pageTitle: 'Nuevo paciente',
             resultado: new resultado(true, "No se pudo actualizar el registro"),
