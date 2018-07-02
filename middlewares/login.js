@@ -57,7 +57,7 @@ exports.requiresLogin = function requiresLogin(req, res, next) {
             if (controlPermisosUsuario(req.session.rol, req.originalUrl)) {
                 return next();
             } else {
-                var result = swig.renderFile('views/errorlogin/permission.html', {
+                var result = swig.renderFile('views/ErrorLogin/permission.html', {
                     mensajeError: "No tiene los permisos necesarios para acceder a esta sección",
                     userRol: req.session.rol,
                     userName: req.session.email
@@ -68,7 +68,7 @@ exports.requiresLogin = function requiresLogin(req, res, next) {
         });
     } else {
         req.session.originUrl = req.originalUrl;
-        var result = swig.renderFile('views/errorlogin/index.html', {
+        var result = swig.renderFile('views/ErrorLogin/index.html', {
             mensajeError: "Necesita iniciar sesión para ver esta sección",
         });
 

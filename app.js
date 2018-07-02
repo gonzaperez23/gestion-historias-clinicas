@@ -50,7 +50,7 @@ app.use('/usuarios', usuarios);
 app.use('/pacientes', pacientes);
 app.use('/historias-clinicas', historiasClinicas);
 
-var port = process.env.PORT || 8000
+var port = process.env.PORT || 8080
 app.listen(port);
 
 module.exports = app;
